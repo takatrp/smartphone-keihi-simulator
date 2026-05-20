@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>スマホで経費 体験シミュレーター</title>
+<style>
+  :root{
+    --brand:#0b6cb1;
+    --brand-dark:#084e80;
+    --accent:#f59e0b;
+    --bg:#eef3f8;
+    --ink:#1f2937;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --ok:#16a34a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;color:var(--ink);background:var(--bg);min-height:100%;}
+  body{display:flex;flex-direction:column;align-items:center;padding:24px 16px 80px;}
+
+  header.page{max-width:920px;width:100%;text-align:center;margin-bottom:24px;}
+  header.page h1{margin:0 0 6px;font-size:24px;color:var(--brand-dark);}
+  header.page p{margin:0;color:var(--muted);font-size:14px;}
+
+  .stage{
+    display:flex;gap:32px;align-items:flex-start;justify-content:center;
+    flex-wrap:wrap;max-width:1100px;width:100%;
+  }
+
+  /* --- phone frame --- */
+  .phone{
+    position:relative;width:360px;height:740px;border-radius:46px;
+    background:#0f172a;padding:14px;box-shadow:0 20px 50px rgba(15,23,42,.25), inset 0 0 0 2px #334155;
+    flex:0 0 auto;
+  }
+  .phone::before{
+    content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
+    width:130px;height:24px;background:#0f172a;border-radius:0 0 18px 18px;z-index:5;
+  }
+  .screen{
+    position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#fff;
+  }
+  .statusbar{
+    height:28px;display:flex;justify-content:space-between;align-items:center;
+    padding:0 22px;font-size:12px;color:#0f172a;font-weight:600;background:#fff;
+  }
+  .statusbar .right{display:flex;gap:6px;align-items:center;}
+  .statusbar .right span{display:inline-block;width:14px;height:8px;background:#0f172a;border-radius:2px;}
+
+  /* --- generic phone UI parts --- */
+  .appbar{
+    background:var(--brand);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;
+    font-weight:700;font-size:16px;
+  }
+  .appbar .back{cursor:default;font-size:18px;line-height:1;opacity:.9}
+  .appbar .title{flex:1;text-align:center;margin-right:24px;}
+
+  .body-scroll{overflow:auto;height:calc(100% - 28px);background:#f6f8fb;}
+
+  /* views */
+  .view{display:none;height:100%;}
+  .view.active{display:block;animation:fade .25s ease-out;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* home */
+  .home-hero{
+    background:linear-gradient(135deg,var(--brand) 0%,#1493d6 100%);
+    color:#fff;padding:18px 16px 22px;
+  }
+  .home-hero .greeting{font-size:12px;opacity:.9}
+  .home-hero .name{font-size:18px;font-weight:700;margin-top:2px;}
+  .home-hero .summary{
+    margin-top:14px;background:rgba(255,255,255,.15);border-radius:12px;padding:12px;display:flex;justify-content:space-between;
+  }
+  .home-hero .summary div{font-size:12px;opacity:.9}
+  .home-hero .summary b{display:block;font-size:18px;margin-top:2px;}
+
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
+  .tile{
+    background:#fff;border-radius:12px;padding:14px 12px;text-align:center;border:1px solid var(--line);
+    cursor:pointer;transition:transform .1s, box-shadow .1s;
+  }
+  .tile:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
+  .tile .icon{
+    width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+    background:#eaf3fb;color:var(--brand);font-size:22px;
+  }
+  .tile.primary .icon{background:#fff3e0;color:var(--accent)}
+  .tile .label{font-size:13px;font-weight:600}
+  .tile .sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+  .list{padding:6px 14px 20px;}
+  .list h3{margin:12px 0 8px;font-size:13px;color:var(--muted);font-weight:600;}
+  .list-item{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;
+    display:flex;justify-content:space-between;align-items:center;font-size:13px;
+  }
+  .list-item .ttl{font-weight:600}
+  .list-item .meta{font-size:11px;color:var(--muted);margin-top:2px;}
+  .badge{
+    font-size:11px;padding:2px 8px;border-radius:999px;background:#eaf3fb;color:var(--brand);font-weight:600;
+  }
+  .badge.warn{background:#fff3e0;color:var(--accent)}
+  .badge.ok{background:#e7f6ec;color:var(--ok)}
+
+  /* camera */
+  .cam{
+    position:relative;height:100%;background:#000;color:#fff;display:flex;flex-direction:column;
+  }
+  .cam-top{
+    padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;background:rgba(0,0,0,.5);
+  }
+  .cam-view{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 40%, #1f2937 0%, #0f172a 70%);
+    position:relative;overflow:hidden;
+  }
+  .receipt-mock{
+    width:55%;background:#fafafa;color:#222;border-radius:4px;padding:14px 12px;font-family:"Courier New",monospace;font-size:11px;
+    transform:rotate(-2deg);box-shadow:0 8px 30px rgba(0,0,0,.5);
+  }
+  .receipt-mock h4{margin:0 0 6px;font-size:13px;text-align:center;}
+  .receipt-mock .row{display:flex;justify-content:space-between;border-bottom:1px dashed #ccc;padding:2px 0;}
+  .receipt-mock .total{font-weight:700;font-size:13px;margin-top:6px;border-top:2px solid #000;padding-top:4px;}
+  .cam-frame{
+    position:absolute;inset:60px 30px 120px;border:2px solid #fff;border-radius:10px;pointer-events:none;
+    box-shadow:0 0 0 9999px rgba(0,0,0,.35);
+  }
+  .cam-frame .corner{position:absolute;width:18px;height:18px;border:3px solid var(--accent);}
+  .cam-frame .corner.tl{top:-3px;left:-3px;border-right:0;border-bottom:0;}
+  .cam-frame .corner.tr{top:-3px;right:-3px;border-left:0;border-bottom:0;}
+  .cam-frame .corner.bl{bottom:-3px;left:-3px;border-right:0;border-top:0;}
+  .cam-frame .corner.br{bottom:-3px;right:-3px;border-left:0;border-top:0;}
+  .cam-hint{position:absolute;top:18px;left:0;right:0;text-align:center;font-size:12px;color:#fff;text-shadow:0 0 4px #000;}
+  .cam-bottom{
+    height:110px;display:flex;align-items:center;justify-content:space-around;background:#000;
+  }
+  .shutter{
+    width:68px;height:68px;border-radius:50%;background:#fff;border:5px solid #bbb;cursor:pointer;
+  }
+  .shutter:active{transform:scale(.95);}
+  .cam-bottom .side{color:#fff;font-size:11px;width:60px;text-align:center;opacity:.85}
+
+  /* ocr progress */
+  .ocr{padding:40px 24px;text-align:center;}
+  .ocr .ring{
+    width:80px;height:80px;border-radius:50%;border:6px solid #e5e7eb;border-top-color:var(--brand);
+    margin:30px auto 20px;animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ocr h2{margin:0 0 8px;font-size:18px;}
+  .ocr p{color:var(--muted);font-size:13px;}
+  .ocr .bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-top:18px;}
+  .ocr .bar i{display:block;height:100%;background:var(--brand);width:0;animation:fill 1.8s ease-out forwards;}
+  @keyframes fill{to{width:100%}}
+
+  /* form */
+  .form{padding:14px 16px 90px;}
+  .form .preview{
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;margin-bottom:14px;
+  }
+  .form .preview .thumb{
+    width:64px;height:84px;background:#fafafa;border:1px solid var(--line);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-family:"Courier New",monospace;
+    flex:0 0 auto;
+  }
+  .form .preview .meta{font-size:12px;color:var(--muted)}
+  .form .preview .meta b{display:block;color:var(--ink);font-size:13px;}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--brand);outline-offset:-1px;}
+  .field .ocr-tag{
+    display:inline-block;font-size:10px;background:#e7f6ec;color:var(--ok);padding:2px 6px;border-radius:4px;margin-left:6px;
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  .footer-action{
+    position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px;
+  }
+  .btn{
+    width:100%;padding:13px;border:0;border-radius:10px;background:var(--brand);color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+  }
+  .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand);}
+  .btn:disabled{opacity:.5}
+
+  /* done */
+  .done{padding:50px 24px;text-align:center;}
+  .done .check{
+    width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;font-size:42px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:pop .4s ease-out;
+  }
+  @keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+  .done h2{margin:0 0 6px;font-size:20px;}
+  .done p{color:var(--muted);font-size:13px;margin:0 0 18px;}
+  .done .recap{background:#f6f8fb;border-radius:10px;padding:12px;text-align:left;font-size:12px;}
+  .done .recap div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--line);}
+  .done .recap div:last-child{border:0}
+
+  /* ---------- tour overlay ---------- */
+  .tour-mask{
+    position:absolute;inset:0;pointer-events:none;border-radius:32px;overflow:hidden;
+  }
+  .tour-mask svg{position:absolute;inset:0;width:100%;height:100%;}
+  .tour-mask rect.dim{fill:rgba(15,23,42,.55)}
+  .tour-pulse{
+    position:absolute;border:3px solid var(--accent);border-radius:10px;
+    box-shadow:0 0 0 4px rgba(245,158,11,.35), 0 0 30px rgba(245,158,11,.5);
+    animation:pulse 1.4s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1);opacity:1}
+    50%{transform:scale(1.04);opacity:.85}
+  }
+  .callout{
+    position:absolute;background:#fff;border-radius:12px;padding:14px 16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:260px;font-size:13px;line-height:1.55;
+    border-top:4px solid var(--accent);
+  }
+  .callout h4{margin:0 0 6px;font-size:14px;color:var(--brand-dark);}
+  .callout p{margin:0 0 10px;color:#1f2937;}
+  .callout .tour-actions{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+  .callout .step-no{font-size:11px;color:var(--muted);}
+  .callout .tour-btns{display:flex;gap:6px;}
+  .callout button{
+    border:0;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .callout .next{background:var(--brand);color:#fff;}
+  .callout .prev{background:#eef3f8;color:var(--brand);}
+  .callout .skip{background:transparent;color:var(--muted);padding:6px 4px;}
+  .callout .arrow{
+    position:absolute;width:14px;height:14px;background:#fff;transform:rotate(45deg);
+  }
+
+  /* --- right side: control panel --- */
+  .control{
+    flex:1 1 320px;max-width:380px;background:#fff;border-radius:14px;padding:18px;
+    border:1px solid var(--line);box-shadow:0 4px 20px rgba(0,0,0,.04);
+  }
+  .control h2{margin:0 0 12px;font-size:16px;color:var(--brand-dark);display:flex;align-items:center;gap:6px;}
+  .control .step-list{list-style:none;margin:0;padding:0;}
+  .control .step-list li{
+    padding:8px 10px;border-radius:8px;font-size:13px;color:var(--muted);
+    display:flex;gap:8px;align-items:center;margin-bottom:2px;cursor:pointer;
+  }
+  .control .step-list li .n{
+    width:22px;height:22px;border-radius:50%;background:#eef3f8;color:var(--brand);
+    font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  }
+  .control .step-list li.current{background:#fff8ec;color:var(--ink);font-weight:600;}
+  .control .step-list li.current .n{background:var(--accent);color:#fff;}
+  .control .step-list li.done{color:var(--ok);}
+  .control .step-list li.done .n{background:var(--ok);color:#fff;}
+  .control .actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
+  .control .actions button{
+    flex:1;padding:10px;border-radius:8px;border:1px solid var(--brand);background:#fff;color:var(--brand);
+    font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .control .actions button.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
+  .control .note{
+    margin-top:14px;font-size:11px;color:var(--muted);line-height:1.6;padding-top:12px;border-top:1px dashed var(--line);
+  }
+
+  @media (max-width:760px){
+    .stage{gap:18px}
+    .control{order:2;width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<header class="page">
+  <h1>スマホで経費 体験シミュレーター</h1>
+  <p>レシート撮影 ▸ 自動読み取り ▸ 経費申請までの流れを、ガイドに沿って体験できます</p>
+</header>
+
+<div class="stage">
+
+  <!-- ===================== PHONE ===================== -->
+  <div class="phone">
+    <div class="screen" id="screen">
+
+      <div class="statusbar">
+        <span>9:41</span>
+        <div class="right"><span></span><span></span><span></span></div>
+      </div>
+
+      <!-- VIEW 1: HOME -->
+      <div class="view active" data-view="home">
+        <div class="body-scroll">
+          <div class="home-hero">
+            <div class="greeting">こんにちは</div>
+            <div class="name">山田 太郎 さん</div>
+            <div class="summary">
+              <div>今月の経費<b>¥ 32,480</b></div>
+              <div>未申請<b>3件</b></div>
+            </div>
+          </div>
+          <div class="tiles">
+            <div class="tile primary" id="tile-camera" onclick="goto('menu')">
+              <div class="icon">📷</div>
+              <div class="label">レシート撮影</div>
+              <div class="sub">OCRで自動入力</div>
+            </div>
+            <div class="tile" onclick="alert('（デモ）手入力で経費を登録します')">
+              <div class="icon">✎</div>
+              <div class="label">手入力</div>
+              <div class="sub">金額を直接入力</div>
+            </div>
+            <div class="tile" onclick="alert('（デモ）申請履歴を表示')">
+              <div class="icon">📋</div>
+              <div class="label">申請履歴</div>
+              <div class="sub">過去の申請</div>
+            </div>
+            <div class="tile" onclick="alert('（デモ）承認待ちの一覧を表示')">
+              <div class="icon">✓</div>
+              <div class="label">承認</div>
+              <div class="sub">確認・承認</div>
+            </div>
+          </div>
+          <div class="list">
+            <h3>未申請の経費</h3>
+            <div class="list-item">
+              <div>
+                <div class="ttl">タクシー代</div>
+                <div class="meta">2026/05/18 ・ ¥2,400</div>
+              </div>
+              <span class="badge warn">下書き</span>
+            </div>
+            <div class="list-item">
+              <div>
+                <div class="ttl">会議用 弁当</div>
+                <div class="meta">2026/05/17 ・ ¥6,800</div>
+              </div>
+              <span class="badge warn">下書き</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: MENU (撮影方法選択) -->
+      <div class="view" data-view="menu">
+        <div class="appbar"><span class="back" onclick="goto('home')">‹</span><span class="title">レシート撮影</span></div>
+        <div class="body-scroll" style="padding:16px;">
+          <div class="tiles" style="grid-template-columns:1fr;padding:0;">
+            <div class="tile primary" id="tile-shoot" onclick="goto('camera')" style="text-align:left;display:flex;gap:12px;align-items:center;">
+              <div class="icon" style="margin:0">📸</div>
+              <div>
+                <div class="label">カメラで撮影する</div>
+                <div class="sub">レシートをその場で撮影</div>
+              </div>
+            </div>
+            <div class="tile" onclick="alert('（デモ）写真ライブラリから選択')" style="text-align:left;display:flex;gap:12px;align-items:center;">
+              <div class="icon" style="margin:0">🖼</div>
+              <div>
+                <div class="label">写真から選ぶ</div>
+                <div class="sub">保存済み画像を読み込み</div>
+              </div>
+            </div>
+            <div class="tile" onclick="alert('（デモ）PDF・メール添付からの取込')" style="text-align:left;display:flex;gap:12px;align-items:center;">
+              <div class="icon" style="margin:0">📎</div>
+              <div>
+                <div class="label">ファイルから取込</div>
+                <div class="sub">PDF・メール添付</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 3: CAMERA -->
+      <div class="view" data-view="camera">
+        <div class="cam">
+          <div class="cam-top">
+            <span onclick="goto('menu')" style="cursor:default">✕</span>
+            <span>レシート撮影</span>
+            <span>⚡</span>
+          </div>
+          <div class="cam-view">
+            <div class="cam-hint">枠内に収まるように撮影してください</div>
+            <div class="cam-frame">
+              <i class="corner tl"></i><i class="corner tr"></i>
+              <i class="corner bl"></i><i class="corner br"></i>
+            </div>
+            <div class="receipt-mock">
+              <h4>○○商事 東京支店</h4>
+              <div class="row"><span>2026/05/19</span><span>14:32</span></div>
+              <div class="row"><span>会議用コーヒー</span><span>¥1,200</span></div>
+              <div class="row"><span>サンドイッチ ×3</span><span>¥2,400</span></div>
+              <div class="row"><span>消費税(10%)</span><span>¥328</span></div>
+              <div class="total"><div class="row"><span>合計</span><span>¥3,928</span></div></div>
+              <div style="text-align:center;margin-top:6px;font-size:9px;color:#888">ご利用ありがとうございました</div>
+            </div>
+          </div>
+          <div class="cam-bottom">
+            <div class="side">アルバム</div>
+            <div class="shutter" id="shutter" onclick="goto('ocr');startOcrTimer()"></div>
+            <div class="side">切替</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 4: OCR processing -->
+      <div class="view" data-view="ocr">
+        <div class="appbar"><span class="title" style="margin:0;text-align:center;flex:1">読み取り中…</span></div>
+        <div class="body-scroll">
+          <div class="ocr">
+            <div class="ring"></div>
+            <h2>レシートを解析しています</h2>
+            <p>日付・店名・金額を自動で抽出します</p>
+            <div class="bar"><i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 5: FORM (after OCR) -->
+      <div class="view" data-view="form">
+        <div class="appbar"><span class="back" onclick="goto('camera')">‹</span><span class="title">経費の登録</span></div>
+        <div class="body-scroll">
+          <div class="form">
+            <div class="preview">
+              <div class="thumb">RECEIPT</div>
+              <div class="meta">
+                <b>○○商事 東京支店</b>
+                <div>2026/05/19 撮影</div>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div class="field">
+                <label>日付 <span class="ocr-tag">OCR</span></label>
+                <input type="date" value="2026-05-19" />
+              </div>
+              <div class="field">
+                <label>金額 <span class="ocr-tag">OCR</span></label>
+                <input type="text" value="¥ 3,928" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>支払先 <span class="ocr-tag">OCR</span></label>
+              <input type="text" value="○○商事 東京支店" />
+            </div>
+
+            <div class="field" id="field-account">
+              <label>勘定科目</label>
+              <select>
+                <option>会議費</option>
+                <option>旅費交通費</option>
+                <option>接待交際費</option>
+                <option>消耗品費</option>
+                <option>新聞図書費</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>摘要</label>
+              <textarea rows="2" placeholder="例：5月度 営業会議 飲食代">5月度 営業会議 飲食代</textarea>
+            </div>
+
+            <div class="field">
+              <label>支払方法</label>
+              <select>
+                <option>立替（現金）</option>
+                <option>法人カード</option>
+                <option>個人カード</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="footer-action">
+            <button class="btn" id="btn-submit" onclick="goto('done')">この内容で申請する</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 6: DONE -->
+      <div class="view" data-view="done">
+        <div class="appbar"><span class="title" style="margin:0;text-align:center;flex:1">申請完了</span></div>
+        <div class="body-scroll">
+          <div class="done">
+            <div class="check">✓</div>
+            <h2>申請を受け付けました</h2>
+            <p>承認者：経理部 鈴木課長</p>
+            <div class="recap">
+              <div><span>日付</span><b>2026/05/19</b></div>
+              <div><span>支払先</span><b>○○商事 東京支店</b></div>
+              <div><span>金額</span><b>¥ 3,928</b></div>
+              <div><span>勘定科目</span><b>会議費</b></div>
+              <div><span>申請番号</span><b>EXP-2026-05-0143</b></div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:8px;">
+              <button class="btn secondary" onclick="restartTour()">最初から見る</button>
+              <button class="btn" onclick="goto('home')">ホームへ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOUR OVERLAY -->
+      <div class="tour-mask" id="tourMask" style="display:none">
+        <svg viewBox="0 0 360 712" preserveAspectRatio="none">
+          <defs>
+            <mask id="holeMask">
+              <rect width="360" height="712" fill="white" />
+              <rect id="tourHole" x="0" y="0" width="0" height="0" rx="10" ry="10" fill="black"/>
+            </mask>
+          </defs>
+          <rect class="dim" width="360" height="712" mask="url(#holeMask)" />
+        </svg>
+        <div class="tour-pulse" id="tourPulse"></div>
+        <div class="callout" id="tourCallout">
+          <h4 id="tourTitle"></h4>
+          <p id="tourBody"></p>
+          <div class="tour-actions">
+            <span class="step-no" id="tourStepNo"></span>
+            <div class="tour-btns">
+              <button class="skip" onclick="endTour()">スキップ</button>
+              <button class="prev" onclick="prevStep()">戻る</button>
+              <button class="next" onclick="nextStep()">次へ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== CONTROL PANEL ===================== -->
+  <aside class="control">
+    <h2>📘 ガイド付きツアー</h2>
+    <ol class="step-list" id="stepList"></ol>
+    <div class="actions">
+      <button class="primary" onclick="restartTour()">ツアーを開始</button>
+      <button onclick="endTour()">自由に操作</button>
+    </div>
+    <div class="note">
+      ※ 本ツールは「スマホで経費」の利用イメージを公開情報をもとに再現した体験デモです。実画面・実機能とは異なる場合があります。
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ===== view switching ===== */
+function goto(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const target = document.querySelector(`.view[data-view="${name}"]`);
+  if(target) target.classList.add('active');
+  // when entering form from ocr, give the OCR animation a moment
+  if(name==='form'){ /* nothing extra */ }
+  // if tour step is bound to a view, reposition the spotlight
+  if(tourActive) positionTour();
+}
+
+function startOcrTimer(){
+  // auto-advance from OCR view to form after ~2s
+  setTimeout(()=>{
+    if(document.querySelector('.view[data-view="ocr"]').classList.contains('active')){
+      goto('form');
+      if(tourActive) nextStepIfWaitingFor('ocr');
+    }
+  }, 2000);
+}
+
+/* ===== tour engine ===== */
+const steps = [
+  {
+    view:'home',
+    target:'#tile-camera',
+    title:'① レシート撮影から始めます',
+    body:'ホーム画面の「レシート撮影」をタップします。スマホで撮るだけで経費登録が始まります。',
+    advanceOnClick:'#tile-camera'
+  },
+  {
+    view:'menu',
+    target:'#tile-shoot',
+    title:'② カメラで撮影を選択',
+    body:'撮影方法を選びます。今回は「カメラで撮影する」を選択します。',
+    advanceOnClick:'#tile-shoot'
+  },
+  {
+    view:'camera',
+    target:'#shutter',
+    title:'③ シャッターボタンを押す',
+    body:'レシートを枠内に収めて撮影します。手ぶれしても自動補正されます。',
+    advanceOnClick:'#shutter'
+  },
+  {
+    view:'ocr',
+    target:null,
+    title:'④ AIが自動で読み取り',
+    body:'数秒で「日付・店名・金額・税率」を読み取ります。手入力はほぼ不要です。',
+    waitFor:'ocr'
+  },
+  {
+    view:'form',
+    target:'#field-account',
+    title:'⑤ 勘定科目だけ確認',
+    body:'OCR結果が入力済みです。勘定科目を確認・必要なら変更します。摘要も自動で候補が入ります。',
+    next:true
+  },
+  {
+    view:'form',
+    target:'#btn-submit',
+    title:'⑥ 申請ボタンを押す',
+    body:'内容を確認したら「申請する」をタップ。承認者にすぐ通知されます。',
+    advanceOnClick:'#btn-submit'
+  },
+  {
+    view:'done',
+    target:null,
+    title:'⑦ 申請完了！',
+    body:'これで経費精算が完了です。撮影から30秒以内。月末にまとめて入力する必要はもうありません。',
+    next:true,
+    final:true
+  }
+];
+
+let stepIdx = 0;
+let tourActive = false;
+let waitingFor = null;
+
+function renderStepList(){
+  const ol = document.getElementById('stepList');
+  ol.innerHTML = steps.map((s,i)=>{
+    const cls = (i===stepIdx && tourActive)?'current':(i<stepIdx?'done':'');
+    return `<li class="${cls}" onclick="jumpTo(${i})"><span class="n">${i+1}</span>${s.title.replace(/^[①-⑨]\s*/,'')}</li>`;
+  }).join('');
+}
+
+function startTour(){
+  tourActive = true;
+  stepIdx = 0;
+  document.getElementById('tourMask').style.display='block';
+  showStep();
+}
+function endTour(){
+  tourActive = false;
+  waitingFor = null;
+  document.getElementById('tourMask').style.display='none';
+  renderStepList();
+}
+function restartTour(){
+  goto('home');
+  startTour();
+}
+function jumpTo(i){
+  if(!tourActive) startTour();
+  stepIdx = i;
+  goto(steps[i].view);
+  showStep();
+}
+function nextStep(){
+  if(stepIdx >= steps.length-1){ endTour(); return; }
+  stepIdx++;
+  goto(steps[stepIdx].view);
+  showStep();
+}
+function prevStep(){
+  if(stepIdx===0) return;
+  stepIdx--;
+  goto(steps[stepIdx].view);
+  showStep();
+}
+function nextStepIfWaitingFor(view){
+  if(tourActive && waitingFor===view){
+    waitingFor = null;
+    nextStep();
+  }
+}
+
+function showStep(){
+  renderStepList();
+  const s = steps[stepIdx];
+  document.getElementById('tourTitle').textContent = s.title;
+  document.getElementById('tourBody').textContent = s.body;
+  document.getElementById('tourStepNo').textContent = `STEP ${stepIdx+1} / ${steps.length}`;
+  waitingFor = s.waitFor || null;
+  positionTour();
+}
+
+function positionTour(){
+  const s = steps[stepIdx];
+  const pulse = document.getElementById('tourPulse');
+  const callout = document.getElementById('tourCallout');
+  const screen = document.getElementById('screen');
+  const hole = document.getElementById('tourHole');
+  const sRect = screen.getBoundingClientRect();
+
+  if(s.target){
+    const el = document.querySelector(s.target);
+    if(el){
+      const r = el.getBoundingClientRect();
+      const x = r.left - sRect.left - 6;
+      const y = r.top - sRect.top - 6;
+      const w = r.width + 12;
+      const h = r.height + 12;
+      pulse.style.display='block';
+      pulse.style.left = x+'px';
+      pulse.style.top = y+'px';
+      pulse.style.width = w+'px';
+      pulse.style.height = h+'px';
+      hole.setAttribute('x', x);
+      hole.setAttribute('y', y);
+      hole.setAttribute('width', w);
+      hole.setAttribute('height', h);
+
+      // callout placement: below if room, else above
+      const calloutH = 150;
+      const screenH = sRect.height;
+      let cTop = y + h + 12;
+      if(cTop + calloutH > screenH - 12){
+        cTop = y - calloutH - 12;
+      }
+      callout.style.top = Math.max(40, cTop) + 'px';
+      callout.style.left = '20px';
+      callout.style.right = '20px';
+    }
+  } else {
+    pulse.style.display='none';
+    hole.setAttribute('width', 0);
+    hole.setAttribute('height', 0);
+    callout.style.top = '40%';
+    callout.style.left = '20px';
+    callout.style.right = '20px';
+  }
+}
+
+/* advance on click handlers */
+document.addEventListener('click', (e)=>{
+  if(!tourActive) return;
+  const s = steps[stepIdx];
+  if(!s.advanceOnClick) return;
+  const t = e.target.closest(s.advanceOnClick);
+  if(t){
+    setTimeout(()=>{ if(tourActive) nextStep(); }, 250);
+  }
+});
+
+window.addEventListener('resize', ()=>{ if(tourActive) positionTour(); });
+
+/* boot */
+renderStepList();
+window.addEventListener('load', ()=>{
+  setTimeout(startTour, 400);
+});
+</script>
+</body>
+</html>
