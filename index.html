@@ -24,6 +24,11 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .ph{max-width:1340px;width:100%;text-align:center;margin-bottom:14px;}
 .ph h1{font-size:21px;color:#1a3050;font-weight:800;}
 .ph p{font-size:12px;color:var(--muted);margin-top:3px;}
+.modesel{display:inline-flex;gap:0;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-top:10px;}
+.modesel-label{font-size:11px;color:var(--muted);font-weight:700;padding:0 10px 0 6px;letter-spacing:.04em;}
+.msbtn{padding:8px 18px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;border:0;background:transparent;color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:5px;}
+.msbtn.act{background:var(--tb);color:#fff;box-shadow:0 2px 6px rgba(20,98,200,.3);}
+.msbtn:not(.act):hover{background:#f1f5fb;color:var(--tb);}
 .stage{display:flex;gap:18px;align-items:flex-start;justify-content:center;max-width:1340px;width:100%;flex-wrap:wrap;}
 
 /* ====== PHONE ====== */
@@ -277,6 +282,11 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 <div class="ph">
   <h1>📱 スマホで経費 × 🖥 FXクラウド 体験シミュレーター</h1>
   <p>レシート撮影からFXクラウドへの仕訳計上まで、実際の操作画面でガイド体験できます</p>
+  <div class="modesel" role="tablist">
+    <span class="modesel-label">モード</span>
+    <button class="msbtn act" id="msbtn-tour" onclick="restartTour()" role="tab">📘 ガイドツアー</button>
+    <button class="msbtn" id="msbtn-free" onclick="endTour()" role="tab">✋ 自由操作</button>
+  </div>
 </div>
 
 <div class="stage">
@@ -698,10 +708,6 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 <aside class="tpanel">
   <h2>📘 ガイドツアー</h2>
   <ol class="slist" id="stepList"></ol>
-  <div class="tact">
-    <button class="tstart" onclick="restartTour()">▶ ツアー開始</button>
-    <button class="tfree" onclick="endTour()">自由操作</button>
-  </div>
   <div class="tnote">※本ツールは「スマホで経費」および「FXまいスタークラウド」の利用イメージを公開情報・実機録画をもとに再現した体験デモです。</div>
 </aside>
 
@@ -768,17 +774,27 @@ function renderStepList(){
   ol.innerHTML=html;
 }
 
+function updateModeButtons(){
+  const t=document.getElementById('msbtn-tour'),f=document.getElementById('msbtn-free');
+  if(!t||!f)return;
+  t.classList.toggle('act',tourActive);
+  f.classList.toggle('act',!tourActive);
+}
 function startTour(){
   tourActive=true;stepIdx=0;
   goPV('home');goFX('fx-home');
   document.getElementById('phoneOvl').classList.add('on');
   showStep();
+  updateModeButtons();
 }
 function endTour(){
   tourActive=false;
   document.getElementById('phoneOvl').classList.remove('on');
   document.getElementById('fxOvl').classList.remove('on');
+  // 自由操作モードでは案内ポップアップも閉じる
+  const ro=document.getElementById('rotateOvl');if(ro)ro.classList.remove('on');
   renderStepList();
+  updateModeButtons();
 }
 function restartTour(){goPV('home');goFX('fx-home');startTour();}
 function jumpTo(i){
