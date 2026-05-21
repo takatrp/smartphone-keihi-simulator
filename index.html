@@ -216,8 +216,9 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 /* ====== TOUR OVERLAY ====== */
 .tovl{position:absolute;inset:0;z-index:20;border-radius:30px;overflow:hidden;pointer-events:none;display:none;}
-.tovl.on{display:block;pointer-events:auto;}
-.tovl svg{position:absolute;inset:0;width:100%;height:100%;}
+.tovl.on{display:block;}
+.tovl svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.tovl .tcall{pointer-events:auto;}
 .tpulse{position:absolute;border:2.5px solid #f59e0b;border-radius:9px;box-shadow:0 0 0 3px rgba(245,158,11,.28),0 0 18px rgba(245,158,11,.38);animation:tp 1.4s ease-in-out infinite;pointer-events:none;}
 @keyframes tp{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
 .tcall{position:absolute;background:#fff;border-radius:11px;padding:11px 13px;box-shadow:0 8px 26px rgba(0,0,0,.22);max-width:230px;font-size:11px;line-height:1.55;border-top:3px solid #f59e0b;z-index:22;}
@@ -233,8 +234,9 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .tcall .tsk{background:transparent;color:var(--muted);}
 /* FX overlay uses absolute inside .fx-panel */
 .fxovl{position:absolute;inset:0;z-index:20;pointer-events:none;display:none;border-radius:14px;overflow:hidden;}
-.fxovl.on{display:block;pointer-events:auto;}
-.fxovl svg{position:absolute;inset:0;width:100%;height:100%;}
+.fxovl.on{display:block;}
+.fxovl svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.fxovl .tcall{pointer-events:auto;}
 
 @media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}}
 </style>
@@ -705,7 +707,7 @@ function showDetToast(){
 /* ===== STEPS ===== */
 const steps=[
   // PHONE steps
-  {side:'phone',pv:'home',   target:'#app-icon-btn', title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」のアイコンをタップして起動します。外出先で受け取ったレシートをすぐに登録できます。',advance:'#app-icon-btn'},
+  {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。',auto:1500},
   {side:'phone',pv:'camera', target:'#shutter-btn', title:'② レシートを撮影',body:'カメラが起動します。枠内にレシートを収めてシャッターボタンをタップ。手ぶれ補正も自動でかかります。',advance:'#shutter-btn'},
   {side:'phone',pv:'confirm',target:'#save-btn',    title:'③ 保存前の確認',body:'撮影したレシートを確認。「保存先のフォルダ」と「購入の事由」を入力して「保存」をタップします。',advance:'#save-btn'},
   {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',waitFor:'uploading'},
@@ -772,7 +774,9 @@ function nextStepIfAt(pv){
   if(tourActive&&curPV===pv){setTimeout(()=>nextStep(),400);}
 }
 
+let autoTimer=null;
 function showStep(){
+  if(autoTimer){clearTimeout(autoTimer);autoTimer=null;}
   renderStepList();
   const s=steps[stepIdx];
   const isPhone=s.side==='phone';
@@ -791,6 +795,17 @@ function showStep(){
     document.getElementById('fxtcall').style.display='block';
   }
   positionTour();
+  // auto-advance for steps with `auto`
+  if(s.auto){
+    const myIdx=stepIdx;
+    autoTimer=setTimeout(()=>{
+      if(tourActive&&stepIdx===myIdx){
+        // simulate the home→camera transition
+        if(s.pv==='home') goPV('camera');
+        nextStep();
+      }
+    },s.auto);
+  }
 }
 
 function positionTour(){
