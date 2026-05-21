@@ -4,6 +4,15 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>スマホで経費 × FXクラウド 体験シミュレーター</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png"/>
+<link rel="shortcut icon" href="favicon.ico"/>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1462c8"/>
+<meta property="og:title" content="スマホで経費 体験シミュレーター（TKC非公認）"/>
+<meta property="og:description" content="レシート撮影からFXクラウドでの仕訳計上までを実画面ベースで体験できるシミュレーター"/>
+<meta property="og:image" content="icon-512.png"/>
 <style>
 :root{
   --tn:#0b3a6e;--tb:#1055a8;--tbtn:#1462c8;
@@ -31,7 +40,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 /* home */
 .vh{background:#111;align-items:center;justify-content:center;gap:10px;}
-.app-icon{width:76px;height:76px;background:linear-gradient(145deg,#1462c8,#0b3a6e);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.app-icon{width:76px;height:76px;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4);overflow:hidden;background:#1462c8;}
+.app-icon img{width:100%;height:100%;object-fit:cover;display:block;}
 .app-icon .cam-svg{width:40px;height:40px;fill:#fff;}
 .app-label{color:#fff;font-size:13px;font-weight:700;}
 .app-tap{color:#888;font-size:11px;}
@@ -281,7 +291,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     <div style="text-align:center;padding-top:30px;">
       <div style="font-size:11px;color:#888;margin-bottom:16px;">Siriからの提案</div>
       <div class="app-icon" id="app-icon-btn" style="margin:0 auto 8px;cursor:pointer;" onclick="goPV('camera')">
-        <svg class="cam-svg" viewBox="0 0 40 40"><rect x="4" y="11" width="32" height="22" rx="4" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="20" cy="22" r="6" fill="none" stroke="#fff" stroke-width="2.5"/><rect x="13" y="7" width="14" height="5" rx="2" fill="#fff"/></svg>
+        <img src="icon-192.png" alt="スマホで経費 体験"/>
       </div>
       <div class="app-label">スマホで経費</div>
       <div class="app-tap" style="margin-top:4px">タップして起動</div>

@@ -1,0 +1,29 @@
+{
+  "name": "スマホで経費 体験シミュレーター（TKC非公認）",
+  "short_name": "スマホで経費体験",
+  "description": "レシート撮影からFXクラウドでの仕訳計上までを実画面ベースで体験できるシミュレーター",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#dde5ef",
+  "theme_color": "#1462c8",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
