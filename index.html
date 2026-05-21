@@ -239,6 +239,28 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxovl .tcall{pointer-events:auto;}
 
 @media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}}
+
+/* === スマホ横向きで FX画面を全画面 PC 風に表示 === */
+@media (max-width: 1024px) and (orientation: landscape){
+  body{padding:6px;}
+  .ph{display:none;}
+  .stage{flex-direction:row;gap:6px;align-items:stretch;}
+  .phone{display:none;}
+  .tpanel{display:none;}
+  .fx-panel{flex:1 1 auto;width:100%;max-width:none;min-height:calc(100vh - 20px);}
+  .fxwrap{font-size:11px;}
+}
+
+/* === スマホ縦持ちで FX ステップ進入時の「横向きにしてください」ポップアップ === */
+.rotate-ovl{position:fixed;inset:0;background:linear-gradient(135deg,#0b3a6e 0%,#1462c8 100%);z-index:9999;display:none;align-items:center;justify-content:center;color:#fff;text-align:center;padding:24px;}
+.rotate-ovl.on{display:flex;}
+.rotate-box{max-width:320px;}
+.rotate-icon{font-size:90px;line-height:1;display:inline-block;animation:rotHint 2.2s ease-in-out infinite;margin-bottom:18px;}
+@keyframes rotHint{0%,40%{transform:rotate(0deg)}60%,100%{transform:rotate(-90deg)}}
+.rotate-box h3{margin:0 0 10px;font-size:20px;}
+.rotate-box p{margin:0 0 18px;font-size:13px;line-height:1.7;color:#dde7f3;}
+.rotate-box .rb-sub{font-size:11px;color:#9fb8d4;margin-top:14px;}
+.rotate-box button{background:#fff;color:#0b3a6e;border:0;border-radius:6px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -799,6 +821,7 @@ function showStep(){
     document.getElementById('fxtcall').style.display='block';
   }
   positionTour();
+  updateRotateOvl();
   // auto-advance for steps with `auto`
   if(s.auto){
     const myIdx=stepIdx;
@@ -880,11 +903,41 @@ document.addEventListener('click',e=>{
     setTimeout(()=>{if(tourActive)nextStep();},300);
   }
 });
-window.addEventListener('resize',()=>{if(tourActive)positionTour();});
+window.addEventListener('resize',()=>{if(tourActive)positionTour();updateRotateOvl();});
+window.addEventListener('orientationchange',()=>{setTimeout(()=>{if(tourActive)positionTour();updateRotateOvl();},200);});
+
+/* === スマホ縦持ち時の「横向きにしてください」案内 === */
+function isMobilePortrait(){
+  // 横幅 800px 以下かつ縦長
+  return window.innerWidth <= 800 && window.innerHeight > window.innerWidth;
+}
+function isFXStep(){
+  return tourActive && steps[stepIdx] && steps[stepIdx].side==='fx';
+}
+function updateRotateOvl(){
+  const ovl=document.getElementById('rotateOvl');
+  if(!ovl)return;
+  if(isFXStep() && isMobilePortrait()){
+    ovl.classList.add('on');
+  }else{
+    ovl.classList.remove('on');
+  }
+}
 
 /* boot */
 renderStepList();
-window.addEventListener('load',()=>setTimeout(startTour,500));
+window.addEventListener('load',()=>setTimeout(()=>{startTour();updateRotateOvl();},500));
 </script>
+
+<!-- ===== スマホ横向き案内ポップアップ ===== -->
+<div class="rotate-ovl" id="rotateOvl">
+  <div class="rotate-box">
+    <div class="rotate-icon">📱</div>
+    <h3>スマホを横向きにしてください</h3>
+    <p>ここから先は経理担当者の<br>PC画面（FXクラウド）を操作します。<br>横向きにすると見やすくなります。</p>
+    <button onclick="document.getElementById('rotateOvl').classList.remove('on');">このまま続ける</button>
+    <div class="rb-sub">※ 端末を回転すると自動で閉じます</div>
+  </div>
+</div>
 </body>
 </html>
