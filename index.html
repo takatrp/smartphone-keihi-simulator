@@ -1,754 +1,870 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>スマホで経費 体験シミュレーター</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>スマホで経費 × FXクラウド 体験シミュレーター</title>
 <style>
-  :root{
-    --brand:#0b6cb1;
-    --brand-dark:#084e80;
-    --accent:#f59e0b;
-    --bg:#eef3f8;
-    --ink:#1f2937;
-    --muted:#6b7280;
-    --line:#e5e7eb;
-    --ok:#16a34a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;color:var(--ink);background:var(--bg);min-height:100%;}
-  body{display:flex;flex-direction:column;align-items:center;padding:24px 16px 80px;}
+:root{
+  --tn:#0b3a6e;--tb:#1055a8;--tbtn:#1462c8;
+  --fg:#507a44;--fgd:#3a5e30;--for:#d97800;--fbg:#f4f2e6;--fbl:#2070b8;
+  --ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--bg:#dde5ef;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;padding:16px 10px 80px;}
+.ph{max-width:1340px;width:100%;text-align:center;margin-bottom:14px;}
+.ph h1{font-size:21px;color:#1a3050;font-weight:800;}
+.ph p{font-size:12px;color:var(--muted);margin-top:3px;}
+.stage{display:flex;gap:18px;align-items:flex-start;justify-content:center;max-width:1340px;width:100%;flex-wrap:wrap;}
 
-  header.page{max-width:920px;width:100%;text-align:center;margin-bottom:24px;}
-  header.page h1{margin:0 0 6px;font-size:24px;color:var(--brand-dark);}
-  header.page p{margin:0;color:var(--muted);font-size:14px;}
+/* ====== PHONE ====== */
+.phone{position:relative;width:340px;height:700px;border-radius:42px;background:#0d1520;padding:11px;box-shadow:0 18px 48px rgba(0,0,0,.3),inset 0 0 0 2px #253550;flex:0 0 auto;}
+.phone::before{content:"";position:absolute;top:11px;left:50%;transform:translateX(-50%);width:110px;height:22px;background:#0d1520;border-radius:0 0 14px 14px;z-index:6;}
+.ps{position:relative;width:100%;height:100%;border-radius:30px;overflow:hidden;background:#fff;}
+.sb{position:absolute;top:0;left:0;right:0;height:26px;display:flex;justify-content:space-between;align-items:center;padding:0 16px 0 14px;font-size:10px;font-weight:700;z-index:4;}
+.sb.dk{color:#fff;}.sb.lt{color:#111;}
+.sb .r{display:flex;gap:3px;align-items:center;}
+/* views */
+.pv{display:none;position:absolute;inset:0;flex-direction:column;animation:pfa .2s ease-out;}
+.pv.on{display:flex;}
+@keyframes pfa{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
 
-  .stage{
-    display:flex;gap:32px;align-items:flex-start;justify-content:center;
-    flex-wrap:wrap;max-width:1100px;width:100%;
-  }
+/* home */
+.vh{background:#111;align-items:center;justify-content:center;gap:10px;}
+.app-icon{width:76px;height:76px;background:linear-gradient(145deg,#1462c8,#0b3a6e);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.app-icon .cam-svg{width:40px;height:40px;fill:#fff;}
+.app-label{color:#fff;font-size:13px;font-weight:700;}
+.app-tap{color:#888;font-size:11px;}
 
-  /* --- phone frame --- */
-  .phone{
-    position:relative;width:360px;height:740px;border-radius:46px;
-    background:#0f172a;padding:14px;box-shadow:0 20px 50px rgba(15,23,42,.25), inset 0 0 0 2px #334155;
-    flex:0 0 auto;
-  }
-  .phone::before{
-    content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);
-    width:130px;height:24px;background:#0f172a;border-radius:0 0 18px 18px;z-index:5;
-  }
-  .screen{
-    position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#fff;
-  }
-  .statusbar{
-    height:28px;display:flex;justify-content:space-between;align-items:center;
-    padding:0 22px;font-size:12px;color:#0f172a;font-weight:600;background:#fff;
-  }
-  .statusbar .right{display:flex;gap:6px;align-items:center;}
-  .statusbar .right span{display:inline-block;width:14px;height:8px;background:#0f172a;border-radius:2px;}
+/* camera */
+.vc{background:#000;}
+.camhdr{background:var(--tn);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;flex:0 0 auto;z-index:2;}
+.camhdr .ch-home{width:34px;height:34px;background:rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;}
+.camhdr .ch-multi{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);border-radius:18px;padding:5px 10px;color:#fff;font-size:11px;display:flex;align-items:center;gap:5px;}
+.camhdr .ch-gear{color:#fff;font-size:18px;opacity:.75;}
+.camview{flex:1;position:relative;background:radial-gradient(#1a2a3a,#050a12);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.cam-hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:10px;color:#fff;text-shadow:0 0 4px rgba(0,0,0,.8);white-space:nowrap;}
+.cf{position:absolute;inset:46px 28px 68px;box-shadow:0 0 0 9999px rgba(0,0,0,.32);border-radius:6px;}
+.cf::before,.cf::after,.cf .b::before,.cf .b::after{content:"";position:absolute;background:#fff;}
+.cf::before{top:-2px;left:-2px;width:18px;height:3px;}.cf::after{top:-2px;left:-2px;width:3px;height:18px;}
+.cf .tr::before{top:-2px;right:-2px;width:18px;height:3px;}.cf .tr::after{top:-2px;right:-2px;width:3px;height:18px;}
+.cf .bl::before{bottom:-2px;left:-2px;width:18px;height:3px;}.cf .bl::after{bottom:-2px;left:-2px;width:3px;height:18px;}
+.cf .br::before{bottom:-2px;right:-2px;width:18px;height:3px;}.cf .br::after{bottom:-2px;right:-2px;width:3px;height:18px;}
+.rc{width:44%;background:#fafafa;color:#222;border-radius:3px;padding:8px 6px;font-family:"Courier New",monospace;font-size:8px;transform:rotate(-1.5deg);box-shadow:0 6px 20px rgba(0,0,0,.55);}
+.rc h4{font-size:9px;text-align:center;margin-bottom:3px;border-bottom:1px solid #ccc;padding-bottom:2px;}
+.rc .rr{display:flex;justify-content:space-between;padding:1px 0;}
+.rc .rt{font-weight:700;border-top:1px solid #000;margin-top:2px;font-size:9px;}
+.cambottom{height:92px;display:flex;align-items:center;justify-content:space-around;background:#000;flex:0 0 auto;}
+.shutter{width:60px;height:60px;border-radius:50%;background:#fff;border:4px solid #bbb;cursor:pointer;}
+.cbs{color:#fff;font-size:10px;width:48px;text-align:center;opacity:.7;}
 
-  /* --- generic phone UI parts --- */
-  .appbar{
-    background:var(--brand);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;
-    font-weight:700;font-size:16px;
-  }
-  .appbar .back{cursor:default;font-size:18px;line-height:1;opacity:.9}
-  .appbar .title{flex:1;text-align:center;margin-right:24px;}
+/* confirm */
+.vconf{background:#fff;}
+.navb{height:50px;display:flex;align-items:center;padding:0 14px;background:var(--tn);flex:0 0 auto;}
+.navb .bk{color:#fff;font-size:20px;margin-right:8px;cursor:pointer;line-height:1;}
+.navb .nt{flex:1;color:#fff;font-size:15px;font-weight:700;text-align:center;}
+.navb .nm{color:#fff;font-size:18px;opacity:.8;}
+.confbody{flex:1;overflow:auto;padding:12px;}
+.rprev{background:#f5f5f5;border-radius:10px;padding:10px;position:relative;margin-bottom:12px;}
+.rprev .rpi{width:100%;height:150px;background:#ebebeb;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.rpi .smrc{width:42%;font-family:"Courier New",monospace;font-size:6px;background:#fff;padding:5px 4px;border-radius:2px;box-shadow:0 2px 6px rgba(0,0,0,.2);transform:rotate(-1deg);}
+.smrc h4{font-size:7px;text-align:center;margin-bottom:2px;}
+.smrc .rr{display:flex;justify-content:space-between;padding:1px 0;}
+.smrc .rt{font-weight:700;border-top:1px solid #000;margin-top:1px;}
+.rprev .reshot{position:absolute;top:10px;right:10px;background:#fff;border:1.5px solid var(--tb);color:var(--tb);border-radius:18px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;}
+.rprev .rot{position:absolute;top:10px;left:10px;width:32px;height:32px;background:rgba(0,0,0,.35);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;}
+.rprev .padd{position:absolute;bottom:10px;left:10px;background:#fff;border:1.5px solid var(--tb);color:var(--tb);border-radius:18px;padding:4px 10px;font-size:10px;font-weight:600;cursor:pointer;}
+.rprev .pcount{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;}
+.fsec{margin-bottom:12px;}
+.fsec .fl{font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:600;}
+.fsel{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#f9f9f9;}
+.fsel .fn{font-size:13px;}.fsel .fbt{background:#fff;border:1px solid var(--tb);color:var(--tb);border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;}
+.rea{width:100%;min-height:72px;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:13px;font-family:inherit;resize:none;background:#fff;}
+.rea::placeholder{color:#bbb;font-size:11px;}
+.savebtn{width:100%;padding:13px;border:0;border-radius:12px;background:var(--tbtn);color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;}
 
-  .body-scroll{overflow:auto;height:calc(100% - 28px);background:#f6f8fb;}
+/* uploading */
+.vupl{background:#fff;}
+.upl-overlay{position:absolute;inset:0;background:rgba(255,255,255,.82);display:flex;align-items:center;justify-content:center;z-index:10;}
+.upl-dialog{background:#fff;border-radius:14px;padding:24px 20px;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.14);min-width:220px;}
+.upl-spin{width:34px;height:34px;border:4px solid #e5e7eb;border-top-color:var(--tb);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.upl-dialog p{font-size:14px;font-weight:600;line-height:1.5;}
 
-  /* views */
-  .view{display:none;height:100%;}
-  .view.active{display:block;animation:fade .25s ease-out;}
-  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* list */
+.vlist{background:#f5f5f5;}
+.listhdr{height:48px;display:flex;align-items:center;padding:0 14px;gap:8px;background:#fff;border-bottom:1px solid var(--line);flex:0 0 auto;}
+.listhdr .hbg{font-size:20px;color:var(--ink);}
+.listhdr .ht{font-size:16px;font-weight:700;flex:1;}
+.listbody{flex:1;overflow:auto;padding:10px;}
+.fdd{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:13px;background:#fff;}
+.fdd .fa{color:var(--muted);}
+.rcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;gap:8px;margin-bottom:8px;}
+.rcard .rth{width:54px;height:72px;flex:0 0 auto;background:#f0f0f0;border-radius:5px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.rth .trc{width:80%;font-family:"Courier New",monospace;font-size:5px;background:#fff;padding:2px;}
+.rcard .ri{flex:1;font-size:12px;}
+.ri .rd{font-weight:700;margin-bottom:1px;}
+.ri .rs{color:var(--muted);font-size:11px;}
+.ri .ra{font-size:14px;font-weight:700;margin-top:2px;}
+.ri .rrs{font-size:10px;color:var(--muted);}
+.fab{position:absolute;bottom:16px;right:14px;background:var(--tbtn);color:#fff;border:0;border-radius:28px;padding:10px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 4px 14px rgba(20,98,200,.38);}
+.toast{position:absolute;bottom:72px;left:10px;right:10px;background:#1a1a1a;color:#fff;border-radius:7px;padding:10px 14px;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;animation:tai .3s ease-out;}
+@keyframes tai{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.toast .tc{width:18px;height:18px;background:#4ade80;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex:0 0 auto;}
 
-  /* home */
-  .home-hero{
-    background:linear-gradient(135deg,var(--brand) 0%,#1493d6 100%);
-    color:#fff;padding:18px 16px 22px;
-  }
-  .home-hero .greeting{font-size:12px;opacity:.9}
-  .home-hero .name{font-size:18px;font-weight:700;margin-top:2px;}
-  .home-hero .summary{
-    margin-top:14px;background:rgba(255,255,255,.15);border-radius:12px;padding:12px;display:flex;justify-content:space-between;
-  }
-  .home-hero .summary div{font-size:12px;opacity:.9}
-  .home-hero .summary b{display:block;font-size:18px;margin-top:2px;}
+/* detail */
+.vdet{background:#fff;}
+.detnav{height:50px;display:flex;align-items:center;padding:0 12px;background:#fff;border-bottom:1px solid var(--line);flex:0 0 auto;}
+.detnav .db{font-size:20px;color:var(--tb);margin-right:6px;cursor:pointer;}
+.detnav .dt{flex:1;font-size:15px;font-weight:700;}
+.detnav .ds{background:var(--tbtn);color:#fff;border:0;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;}
+.detnav .dm{font-size:18px;color:var(--muted);margin-left:6px;}
+.detbody{flex:1;overflow:auto;}
+.rimgblk{background:#f0f0f0;height:150px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.rimgblk .pbadge{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.5);color:#fff;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;}
+.rimgblk .exp{position:absolute;bottom:7px;right:7px;background:rgba(0,0,0,.4);border-radius:5px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;}
+.rimgblk .rbi{height:130px;font-family:"Courier New",monospace;font-size:6px;background:#fff;padding:6px 5px;border-radius:2px;box-shadow:0 4px 12px rgba(0,0,0,.18);}
+.rbi h4{font-size:8px;text-align:center;margin-bottom:3px;}
+.rbi .rr{display:flex;justify-content:space-between;padding:1px 0;}
+.rbi .rt{font-weight:700;border-top:1px solid #000;margin-top:2px;}
+.detform{padding:12px;}
+.df{margin-bottom:10px;}
+.df label{display:block;font-size:10px;color:var(--muted);margin-bottom:3px;font-weight:600;}
+.df input,.df select{width:100%;border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:13px;background:#fff;font-family:inherit;}
+.taxsec{background:#f9f9f9;border:1px solid var(--line);border-radius:9px;padding:10px;margin-bottom:8px;}
+.taxsec .tsl{font-size:11px;font-weight:700;margin-bottom:7px;color:#444;}
+.trow{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;}
+.trow .tl{color:var(--muted);}
+.trow .tv{font-weight:700;}
+.addtax{border:1.5px dashed var(--tb);color:var(--tb);background:transparent;border-radius:7px;padding:7px;width:100%;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:8px;}
+.nxtdoc{position:absolute;bottom:12px;right:12px;background:#fff;border:1px solid var(--tb);color:var(--tb);border-radius:18px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;}
 
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;}
-  .tile{
-    background:#fff;border-radius:12px;padding:14px 12px;text-align:center;border:1px solid var(--line);
-    cursor:pointer;transition:transform .1s, box-shadow .1s;
-  }
-  .tile:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
-  .tile .icon{
-    width:44px;height:44px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
-    background:#eaf3fb;color:var(--brand);font-size:22px;
-  }
-  .tile.primary .icon{background:#fff3e0;color:var(--accent)}
-  .tile .label{font-size:13px;font-weight:600}
-  .tile .sub{font-size:11px;color:var(--muted);margin-top:2px}
+/* ====== FX CLOUD ====== */
+.fx-panel{flex:1 1 760px;min-width:300px;background:#fff;border-radius:14px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(0,0,0,.05);overflow:hidden;}
+.fxbbar{background:#eaeaea;padding:7px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #ccc;}
+.fxbbar .dots{display:flex;gap:4px;}
+.fxbbar .dot{width:9px;height:9px;border-radius:50%;background:#ccc;}
+.fxbbar .dot.r{background:#ff6057;}.fxbbar .dot.y{background:#febc2e;}.fxbbar .dot.g{background:#28c840;}
+.fxbbar .url{flex:1;background:#fff;border-radius:3px;padding:3px 8px;font-size:10px;color:#666;border:1px solid #ccc;}
+.fxwrap{min-height:500px;background:var(--fbg);}
+/* FX top */
+.fxtop{background:#fff;border-bottom:1px solid #ddd;padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
+.fxtop .logo{display:flex;align-items:center;gap:3px;}
+.fxtop .logofx{font-weight:900;font-size:13px;color:#1a5a9a;}
+.fxtop .logorest{font-size:10px;color:#444;}
+.fxtop .certbadge{font-size:8px;color:var(--for);border:1px solid var(--for);border-radius:2px;padding:1px 3px;margin-left:4px;}
+.fxtop .userinfo{font-size:10px;color:#555;}
+.fxtop .sysbtn{background:var(--for);color:#fff;border:0;border-radius:3px;padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;}
+/* FX nav */
+.fxnav{background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 10px;height:30px;font-size:10px;}
+.fxni{padding:0 8px;height:30px;display:flex;align-items:center;color:#555;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.fxni:hover{color:var(--fg);}
+/* FX main */
+.fxmain{display:flex;min-height:440px;}
+.fxsidebar{width:130px;background:#fff;border-right:1px solid #ddd;flex:0 0 auto;}
+.fxsb-hdr{background:var(--for);color:#fff;padding:7px 9px;font-size:10px;font-weight:700;cursor:pointer;}
+.fxsb-item{padding:7px 9px 7px 12px;font-size:11px;color:#333;cursor:pointer;border-bottom:1px solid #ede;display:flex;align-items:center;justify-content:space-between;}
+.fxsb-item:hover{background:#f0f5ee;}
+.fxsb-item.act{background:#e6f0e2;color:var(--fg);font-weight:700;}
+.fxsb-item .sba{color:#aaa;font-size:9px;}
+/* FX content */
+.fxcnt{flex:1;padding:10px;overflow:auto;}
+.fxbc{font-size:10px;color:#555;margin-bottom:8px;}
+.fxbc a{color:var(--fg);cursor:pointer;text-decoration:none;}
+.fxbc a:hover{text-decoration:underline;}
+.fxinfo{background:#dceef8;border:1px solid #a8c8df;border-radius:3px;padding:7px 10px;font-size:10px;color:#1a4060;margin-bottom:10px;display:flex;gap:5px;}
+.fxinfo .ii{color:var(--fbl);font-weight:700;}
+/* tables */
+.ftbl{width:100%;border-collapse:collapse;font-size:11px;}
+.ftbl th{background:var(--fg);color:#fff;padding:6px 7px;border:1px solid #3e6234;font-weight:600;text-align:center;}
+.ftbl td{padding:6px 7px;border:1px solid #cdd8c4;background:#fff;text-align:center;}
+.ftbl tr:hover td{background:#f5fbf2;}
+.btnd{background:var(--fbl);color:#fff;border:0;border-radius:3px;padding:3px 8px;font-size:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:2px;}
+.btnd.off{background:#aaa;cursor:default;}
+.btnkd{background:var(--for);color:#fff;border:0;border-radius:3px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;float:right;}
+.btnkej{background:var(--fg);color:#fff;border:0;border-radius:3px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
+.btnkej:disabled{background:#aaa;cursor:default;}
+/* journal table */
+.jtbl{width:100%;border-collapse:collapse;font-size:10px;}
+.jtbl th{background:var(--fg);color:#fff;padding:5px 4px;border:1px solid #3e6234;font-weight:600;text-align:center;font-size:9px;}
+.jtbl td{padding:5px 4px;border:1px solid #cdd8c4;text-align:center;background:#fff;vertical-align:middle;}
+.jtbl tr.jrow td{background:#fafff8;}
+.jsel-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.jsel-bar .jsl{font-size:11px;}
+.fx-done-msg{background:#e6f4e0;border:1px solid #8ab870;border-radius:5px;padding:12px;text-align:center;font-size:13px;color:#2a6020;font-weight:700;margin:18px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
+/* FX views */
+.fxv{display:none;}.fxv.on{display:block;}
 
-  .list{padding:6px 14px 20px;}
-  .list h3{margin:12px 0 8px;font-size:13px;color:var(--muted);font-weight:600;}
-  .list-item{
-    background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;
-    display:flex;justify-content:space-between;align-items:center;font-size:13px;
-  }
-  .list-item .ttl{font-weight:600}
-  .list-item .meta{font-size:11px;color:var(--muted);margin-top:2px;}
-  .badge{
-    font-size:11px;padding:2px 8px;border-radius:999px;background:#eaf3fb;color:var(--brand);font-weight:600;
-  }
-  .badge.warn{background:#fff3e0;color:var(--accent)}
-  .badge.ok{background:#e7f6ec;color:var(--ok)}
+/* ====== TOUR PANEL ====== */
+.tpanel{flex:0 1 260px;background:#fff;border-radius:14px;padding:14px;border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.04);}
+.tpanel h2{font-size:14px;font-weight:700;color:#1a3050;margin-bottom:10px;}
+.slist{list-style:none;padding:0;}
+.slist .pl{font-size:9px;font-weight:700;color:#aaa;letter-spacing:.06em;text-transform:uppercase;padding:6px 6px 2px;}
+.slist li{padding:6px 7px;border-radius:7px;font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:flex-start;margin-bottom:2px;cursor:pointer;}
+.slist li .n{width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}
+.slist li.ps .n{background:#eaf0fb;color:var(--tb);}
+.slist li.fs .n{background:#e8f4e2;color:var(--fg);}
+.slist li.cur{background:#fff8ec;color:var(--ink);font-weight:600;}
+.slist li.cur.ps .n{background:var(--tb);color:#fff;}
+.slist li.cur.fs .n{background:var(--fg);color:#fff;}
+.slist li.dn .n{background:#e4f5e4;color:#4ade80;}
+.tact{margin-top:10px;display:flex;gap:6px;}
+.tact button{flex:1;padding:8px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;}
+.tact .tstart{background:var(--tb);color:#fff;border:0;}
+.tact .tfree{background:#fff;color:var(--muted);border:1px solid var(--line);}
+.tnote{margin-top:10px;font-size:9px;color:var(--muted);line-height:1.6;padding-top:8px;border-top:1px dashed var(--line);}
 
-  /* camera */
-  .cam{
-    position:relative;height:100%;background:#000;color:#fff;display:flex;flex-direction:column;
-  }
-  .cam-top{
-    padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;background:rgba(0,0,0,.5);
-  }
-  .cam-view{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    background:
-      radial-gradient(ellipse at 50% 40%, #1f2937 0%, #0f172a 70%);
-    position:relative;overflow:hidden;
-  }
-  .receipt-mock{
-    width:55%;background:#fafafa;color:#222;border-radius:4px;padding:14px 12px;font-family:"Courier New",monospace;font-size:11px;
-    transform:rotate(-2deg);box-shadow:0 8px 30px rgba(0,0,0,.5);
-  }
-  .receipt-mock h4{margin:0 0 6px;font-size:13px;text-align:center;}
-  .receipt-mock .row{display:flex;justify-content:space-between;border-bottom:1px dashed #ccc;padding:2px 0;}
-  .receipt-mock .total{font-weight:700;font-size:13px;margin-top:6px;border-top:2px solid #000;padding-top:4px;}
-  .cam-frame{
-    position:absolute;inset:60px 30px 120px;border:2px solid #fff;border-radius:10px;pointer-events:none;
-    box-shadow:0 0 0 9999px rgba(0,0,0,.35);
-  }
-  .cam-frame .corner{position:absolute;width:18px;height:18px;border:3px solid var(--accent);}
-  .cam-frame .corner.tl{top:-3px;left:-3px;border-right:0;border-bottom:0;}
-  .cam-frame .corner.tr{top:-3px;right:-3px;border-left:0;border-bottom:0;}
-  .cam-frame .corner.bl{bottom:-3px;left:-3px;border-right:0;border-top:0;}
-  .cam-frame .corner.br{bottom:-3px;right:-3px;border-left:0;border-top:0;}
-  .cam-hint{position:absolute;top:18px;left:0;right:0;text-align:center;font-size:12px;color:#fff;text-shadow:0 0 4px #000;}
-  .cam-bottom{
-    height:110px;display:flex;align-items:center;justify-content:space-around;background:#000;
-  }
-  .shutter{
-    width:68px;height:68px;border-radius:50%;background:#fff;border:5px solid #bbb;cursor:pointer;
-  }
-  .shutter:active{transform:scale(.95);}
-  .cam-bottom .side{color:#fff;font-size:11px;width:60px;text-align:center;opacity:.85}
+/* ====== TOUR OVERLAY ====== */
+.tovl{position:absolute;inset:0;z-index:20;border-radius:30px;overflow:hidden;pointer-events:none;display:none;}
+.tovl.on{display:block;pointer-events:auto;}
+.tovl svg{position:absolute;inset:0;width:100%;height:100%;}
+.tpulse{position:absolute;border:2.5px solid #f59e0b;border-radius:9px;box-shadow:0 0 0 3px rgba(245,158,11,.28),0 0 18px rgba(245,158,11,.38);animation:tp 1.4s ease-in-out infinite;pointer-events:none;}
+@keyframes tp{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.tcall{position:absolute;background:#fff;border-radius:11px;padding:11px 13px;box-shadow:0 8px 26px rgba(0,0,0,.22);max-width:230px;font-size:11px;line-height:1.55;border-top:3px solid #f59e0b;z-index:22;}
+.tcall h4{margin:0 0 5px;font-size:12px;color:#1a3050;}
+.tcall p{margin:0 0 8px;color:var(--ink);}
+.tcall .tca{display:flex;justify-content:space-between;align-items:center;gap:3px;}
+.tcall .tno{font-size:9px;color:var(--muted);}
+.tcall .tbtns{display:flex;gap:3px;}
+.tcall button{border:0;border-radius:4px;padding:4px 9px;font-size:10px;font-weight:700;cursor:pointer;}
+.tcall .tnx{background:var(--tb);color:#fff;}
+.tcall .tnxf{background:var(--fg);color:#fff;}
+.tcall .tpv{background:#eef3f8;color:var(--tb);}
+.tcall .tsk{background:transparent;color:var(--muted);}
+/* FX overlay uses absolute inside .fx-panel */
+.fxovl{position:absolute;inset:0;z-index:20;pointer-events:none;display:none;border-radius:14px;overflow:hidden;}
+.fxovl.on{display:block;pointer-events:auto;}
+.fxovl svg{position:absolute;inset:0;width:100%;height:100%;}
 
-  /* ocr progress */
-  .ocr{padding:40px 24px;text-align:center;}
-  .ocr .ring{
-    width:80px;height:80px;border-radius:50%;border:6px solid #e5e7eb;border-top-color:var(--brand);
-    margin:30px auto 20px;animation:spin 1s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .ocr h2{margin:0 0 8px;font-size:18px;}
-  .ocr p{color:var(--muted);font-size:13px;}
-  .ocr .bar{height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden;margin-top:18px;}
-  .ocr .bar i{display:block;height:100%;background:var(--brand);width:0;animation:fill 1.8s ease-out forwards;}
-  @keyframes fill{to{width:100%}}
-
-  /* form */
-  .form{padding:14px 16px 90px;}
-  .form .preview{
-    background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;gap:10px;align-items:center;margin-bottom:14px;
-  }
-  .form .preview .thumb{
-    width:64px;height:84px;background:#fafafa;border:1px solid var(--line);border-radius:6px;
-    display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-family:"Courier New",monospace;
-    flex:0 0 auto;
-  }
-  .form .preview .meta{font-size:12px;color:var(--muted)}
-  .form .preview .meta b{display:block;color:var(--ink);font-size:13px;}
-
-  .field{margin-bottom:14px;}
-  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600;}
-  .field input, .field select, .field textarea{
-    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:#fff;font-family:inherit;
-  }
-  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--brand);outline-offset:-1px;}
-  .field .ocr-tag{
-    display:inline-block;font-size:10px;background:#e7f6ec;color:var(--ok);padding:2px 6px;border-radius:4px;margin-left:6px;
-  }
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
-  .footer-action{
-    position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 16px;
-  }
-  .btn{
-    width:100%;padding:13px;border:0;border-radius:10px;background:var(--brand);color:#fff;font-size:15px;font-weight:700;cursor:pointer;
-  }
-  .btn.secondary{background:#fff;color:var(--brand);border:1px solid var(--brand);}
-  .btn:disabled{opacity:.5}
-
-  /* done */
-  .done{padding:50px 24px;text-align:center;}
-  .done .check{
-    width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;font-size:42px;
-    display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:pop .4s ease-out;
-  }
-  @keyframes pop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
-  .done h2{margin:0 0 6px;font-size:20px;}
-  .done p{color:var(--muted);font-size:13px;margin:0 0 18px;}
-  .done .recap{background:#f6f8fb;border-radius:10px;padding:12px;text-align:left;font-size:12px;}
-  .done .recap div{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--line);}
-  .done .recap div:last-child{border:0}
-
-  /* ---------- tour overlay ---------- */
-  .tour-mask{
-    position:absolute;inset:0;pointer-events:none;border-radius:32px;overflow:hidden;
-  }
-  .tour-mask svg{position:absolute;inset:0;width:100%;height:100%;}
-  .tour-mask rect.dim{fill:rgba(15,23,42,.55)}
-  .tour-pulse{
-    position:absolute;border:3px solid var(--accent);border-radius:10px;
-    box-shadow:0 0 0 4px rgba(245,158,11,.35), 0 0 30px rgba(245,158,11,.5);
-    animation:pulse 1.4s ease-in-out infinite;pointer-events:none;
-  }
-  @keyframes pulse{
-    0%,100%{transform:scale(1);opacity:1}
-    50%{transform:scale(1.04);opacity:.85}
-  }
-  .callout{
-    position:absolute;background:#fff;border-radius:12px;padding:14px 16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:260px;font-size:13px;line-height:1.55;
-    border-top:4px solid var(--accent);
-  }
-  .callout h4{margin:0 0 6px;font-size:14px;color:var(--brand-dark);}
-  .callout p{margin:0 0 10px;color:#1f2937;}
-  .callout .tour-actions{display:flex;justify-content:space-between;align-items:center;gap:6px;}
-  .callout .step-no{font-size:11px;color:var(--muted);}
-  .callout .tour-btns{display:flex;gap:6px;}
-  .callout button{
-    border:0;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;
-  }
-  .callout .next{background:var(--brand);color:#fff;}
-  .callout .prev{background:#eef3f8;color:var(--brand);}
-  .callout .skip{background:transparent;color:var(--muted);padding:6px 4px;}
-  .callout .arrow{
-    position:absolute;width:14px;height:14px;background:#fff;transform:rotate(45deg);
-  }
-
-  /* --- right side: control panel --- */
-  .control{
-    flex:1 1 320px;max-width:380px;background:#fff;border-radius:14px;padding:18px;
-    border:1px solid var(--line);box-shadow:0 4px 20px rgba(0,0,0,.04);
-  }
-  .control h2{margin:0 0 12px;font-size:16px;color:var(--brand-dark);display:flex;align-items:center;gap:6px;}
-  .control .step-list{list-style:none;margin:0;padding:0;}
-  .control .step-list li{
-    padding:8px 10px;border-radius:8px;font-size:13px;color:var(--muted);
-    display:flex;gap:8px;align-items:center;margin-bottom:2px;cursor:pointer;
-  }
-  .control .step-list li .n{
-    width:22px;height:22px;border-radius:50%;background:#eef3f8;color:var(--brand);
-    font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;
-  }
-  .control .step-list li.current{background:#fff8ec;color:var(--ink);font-weight:600;}
-  .control .step-list li.current .n{background:var(--accent);color:#fff;}
-  .control .step-list li.done{color:var(--ok);}
-  .control .step-list li.done .n{background:var(--ok);color:#fff;}
-  .control .actions{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;}
-  .control .actions button{
-    flex:1;padding:10px;border-radius:8px;border:1px solid var(--brand);background:#fff;color:var(--brand);
-    font-size:13px;font-weight:600;cursor:pointer;
-  }
-  .control .actions button.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
-  .control .note{
-    margin-top:14px;font-size:11px;color:var(--muted);line-height:1.6;padding-top:12px;border-top:1px dashed var(--line);
-  }
-
-  @media (max-width:760px){
-    .stage{gap:18px}
-    .control{order:2;width:100%;}
-  }
+@media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}}
 </style>
 </head>
 <body>
-
-<header class="page">
-  <h1>スマホで経費 体験シミュレーター</h1>
-  <p>レシート撮影 ▸ 自動読み取り ▸ 経費申請までの流れを、ガイドに沿って体験できます</p>
-</header>
+<div class="ph">
+  <h1>📱 スマホで経費 × 🖥 FXクラウド 体験シミュレーター</h1>
+  <p>レシート撮影からFXクラウドへの仕訳計上まで、実際の操作画面でガイド体験できます</p>
+</div>
 
 <div class="stage">
 
-  <!-- ===================== PHONE ===================== -->
-  <div class="phone">
-    <div class="screen" id="screen">
+<!-- ===== PHONE ===== -->
+<div class="phone">
+ <div class="ps" id="phoneScreen">
+  <div class="sb dk" style="padding-top:2px"><span>16:52</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
 
-      <div class="statusbar">
-        <span>9:41</span>
-        <div class="right"><span></span><span></span><span></span></div>
+  <!-- HOME -->
+  <div class="pv vh on" data-pv="home" id="pv-home">
+    <div style="text-align:center;padding-top:30px;">
+      <div style="font-size:11px;color:#888;margin-bottom:16px;">Siriからの提案</div>
+      <div class="app-icon" id="app-icon-btn" style="margin:0 auto 8px;cursor:pointer;" onclick="goPV('camera')">
+        <svg class="cam-svg" viewBox="0 0 40 40"><rect x="4" y="11" width="32" height="22" rx="4" fill="none" stroke="#fff" stroke-width="2.5"/><circle cx="20" cy="22" r="6" fill="none" stroke="#fff" stroke-width="2.5"/><rect x="13" y="7" width="14" height="5" rx="2" fill="#fff"/></svg>
       </div>
-
-      <!-- VIEW 1: HOME -->
-      <div class="view active" data-view="home">
-        <div class="body-scroll">
-          <div class="home-hero">
-            <div class="greeting">こんにちは</div>
-            <div class="name">山田 太郎 さん</div>
-            <div class="summary">
-              <div>今月の経費<b>¥ 32,480</b></div>
-              <div>未申請<b>3件</b></div>
-            </div>
-          </div>
-          <div class="tiles">
-            <div class="tile primary" id="tile-camera" onclick="goto('menu')">
-              <div class="icon">📷</div>
-              <div class="label">レシート撮影</div>
-              <div class="sub">OCRで自動入力</div>
-            </div>
-            <div class="tile" onclick="alert('（デモ）手入力で経費を登録します')">
-              <div class="icon">✎</div>
-              <div class="label">手入力</div>
-              <div class="sub">金額を直接入力</div>
-            </div>
-            <div class="tile" onclick="alert('（デモ）申請履歴を表示')">
-              <div class="icon">📋</div>
-              <div class="label">申請履歴</div>
-              <div class="sub">過去の申請</div>
-            </div>
-            <div class="tile" onclick="alert('（デモ）承認待ちの一覧を表示')">
-              <div class="icon">✓</div>
-              <div class="label">承認</div>
-              <div class="sub">確認・承認</div>
-            </div>
-          </div>
-          <div class="list">
-            <h3>未申請の経費</h3>
-            <div class="list-item">
-              <div>
-                <div class="ttl">タクシー代</div>
-                <div class="meta">2026/05/18 ・ ¥2,400</div>
-              </div>
-              <span class="badge warn">下書き</span>
-            </div>
-            <div class="list-item">
-              <div>
-                <div class="ttl">会議用 弁当</div>
-                <div class="meta">2026/05/17 ・ ¥6,800</div>
-              </div>
-              <span class="badge warn">下書き</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW 2: MENU (撮影方法選択) -->
-      <div class="view" data-view="menu">
-        <div class="appbar"><span class="back" onclick="goto('home')">‹</span><span class="title">レシート撮影</span></div>
-        <div class="body-scroll" style="padding:16px;">
-          <div class="tiles" style="grid-template-columns:1fr;padding:0;">
-            <div class="tile primary" id="tile-shoot" onclick="goto('camera')" style="text-align:left;display:flex;gap:12px;align-items:center;">
-              <div class="icon" style="margin:0">📸</div>
-              <div>
-                <div class="label">カメラで撮影する</div>
-                <div class="sub">レシートをその場で撮影</div>
-              </div>
-            </div>
-            <div class="tile" onclick="alert('（デモ）写真ライブラリから選択')" style="text-align:left;display:flex;gap:12px;align-items:center;">
-              <div class="icon" style="margin:0">🖼</div>
-              <div>
-                <div class="label">写真から選ぶ</div>
-                <div class="sub">保存済み画像を読み込み</div>
-              </div>
-            </div>
-            <div class="tile" onclick="alert('（デモ）PDF・メール添付からの取込')" style="text-align:left;display:flex;gap:12px;align-items:center;">
-              <div class="icon" style="margin:0">📎</div>
-              <div>
-                <div class="label">ファイルから取込</div>
-                <div class="sub">PDF・メール添付</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW 3: CAMERA -->
-      <div class="view" data-view="camera">
-        <div class="cam">
-          <div class="cam-top">
-            <span onclick="goto('menu')" style="cursor:default">✕</span>
-            <span>レシート撮影</span>
-            <span>⚡</span>
-          </div>
-          <div class="cam-view">
-            <div class="cam-hint">枠内に収まるように撮影してください</div>
-            <div class="cam-frame">
-              <i class="corner tl"></i><i class="corner tr"></i>
-              <i class="corner bl"></i><i class="corner br"></i>
-            </div>
-            <div class="receipt-mock">
-              <h4>○○商事 東京支店</h4>
-              <div class="row"><span>2026/05/19</span><span>14:32</span></div>
-              <div class="row"><span>会議用コーヒー</span><span>¥1,200</span></div>
-              <div class="row"><span>サンドイッチ ×3</span><span>¥2,400</span></div>
-              <div class="row"><span>消費税(10%)</span><span>¥328</span></div>
-              <div class="total"><div class="row"><span>合計</span><span>¥3,928</span></div></div>
-              <div style="text-align:center;margin-top:6px;font-size:9px;color:#888">ご利用ありがとうございました</div>
-            </div>
-          </div>
-          <div class="cam-bottom">
-            <div class="side">アルバム</div>
-            <div class="shutter" id="shutter" onclick="goto('ocr');startOcrTimer()"></div>
-            <div class="side">切替</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW 4: OCR processing -->
-      <div class="view" data-view="ocr">
-        <div class="appbar"><span class="title" style="margin:0;text-align:center;flex:1">読み取り中…</span></div>
-        <div class="body-scroll">
-          <div class="ocr">
-            <div class="ring"></div>
-            <h2>レシートを解析しています</h2>
-            <p>日付・店名・金額を自動で抽出します</p>
-            <div class="bar"><i></i></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW 5: FORM (after OCR) -->
-      <div class="view" data-view="form">
-        <div class="appbar"><span class="back" onclick="goto('camera')">‹</span><span class="title">経費の登録</span></div>
-        <div class="body-scroll">
-          <div class="form">
-            <div class="preview">
-              <div class="thumb">RECEIPT</div>
-              <div class="meta">
-                <b>○○商事 東京支店</b>
-                <div>2026/05/19 撮影</div>
-              </div>
-            </div>
-
-            <div class="row2">
-              <div class="field">
-                <label>日付 <span class="ocr-tag">OCR</span></label>
-                <input type="date" value="2026-05-19" />
-              </div>
-              <div class="field">
-                <label>金額 <span class="ocr-tag">OCR</span></label>
-                <input type="text" value="¥ 3,928" />
-              </div>
-            </div>
-
-            <div class="field">
-              <label>支払先 <span class="ocr-tag">OCR</span></label>
-              <input type="text" value="○○商事 東京支店" />
-            </div>
-
-            <div class="field" id="field-account">
-              <label>勘定科目</label>
-              <select>
-                <option>会議費</option>
-                <option>旅費交通費</option>
-                <option>接待交際費</option>
-                <option>消耗品費</option>
-                <option>新聞図書費</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>摘要</label>
-              <textarea rows="2" placeholder="例：5月度 営業会議 飲食代">5月度 営業会議 飲食代</textarea>
-            </div>
-
-            <div class="field">
-              <label>支払方法</label>
-              <select>
-                <option>立替（現金）</option>
-                <option>法人カード</option>
-                <option>個人カード</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="footer-action">
-            <button class="btn" id="btn-submit" onclick="goto('done')">この内容で申請する</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEW 6: DONE -->
-      <div class="view" data-view="done">
-        <div class="appbar"><span class="title" style="margin:0;text-align:center;flex:1">申請完了</span></div>
-        <div class="body-scroll">
-          <div class="done">
-            <div class="check">✓</div>
-            <h2>申請を受け付けました</h2>
-            <p>承認者：経理部 鈴木課長</p>
-            <div class="recap">
-              <div><span>日付</span><b>2026/05/19</b></div>
-              <div><span>支払先</span><b>○○商事 東京支店</b></div>
-              <div><span>金額</span><b>¥ 3,928</b></div>
-              <div><span>勘定科目</span><b>会議費</b></div>
-              <div><span>申請番号</span><b>EXP-2026-05-0143</b></div>
-            </div>
-            <div style="margin-top:18px;display:flex;gap:8px;">
-              <button class="btn secondary" onclick="restartTour()">最初から見る</button>
-              <button class="btn" onclick="goto('home')">ホームへ</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TOUR OVERLAY -->
-      <div class="tour-mask" id="tourMask" style="display:none">
-        <svg viewBox="0 0 360 712" preserveAspectRatio="none">
-          <defs>
-            <mask id="holeMask">
-              <rect width="360" height="712" fill="white" />
-              <rect id="tourHole" x="0" y="0" width="0" height="0" rx="10" ry="10" fill="black"/>
-            </mask>
-          </defs>
-          <rect class="dim" width="360" height="712" mask="url(#holeMask)" />
-        </svg>
-        <div class="tour-pulse" id="tourPulse"></div>
-        <div class="callout" id="tourCallout">
-          <h4 id="tourTitle"></h4>
-          <p id="tourBody"></p>
-          <div class="tour-actions">
-            <span class="step-no" id="tourStepNo"></span>
-            <div class="tour-btns">
-              <button class="skip" onclick="endTour()">スキップ</button>
-              <button class="prev" onclick="prevStep()">戻る</button>
-              <button class="next" onclick="nextStep()">次へ</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <div class="app-label">スマホで経費</div>
+      <div class="app-tap" style="margin-top:4px">タップして起動</div>
     </div>
   </div>
 
-  <!-- ===================== CONTROL PANEL ===================== -->
-  <aside class="control">
-    <h2>📘 ガイド付きツアー</h2>
-    <ol class="step-list" id="stepList"></ol>
-    <div class="actions">
-      <button class="primary" onclick="restartTour()">ツアーを開始</button>
-      <button onclick="endTour()">自由に操作</button>
+  <!-- CAMERA -->
+  <div class="pv vc" data-pv="camera">
+    <div class="sb dk" style="position:relative;background:var(--tn);z-index:5;padding-top:2px"><span>16:52</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
+    <div class="camhdr">
+      <div class="ch-home">⌂</div>
+      <div class="ch-multi">▣ 複数ページ</div>
+      <div class="ch-gear">⚙</div>
     </div>
-    <div class="note">
-      ※ 本ツールは「スマホで経費」の利用イメージを公開情報をもとに再現した体験デモです。実画面・実機能とは異なる場合があります。
+    <div class="camview">
+      <div class="cam-hint">枠内に収まるように撮影してください</div>
+      <div class="cf"><div class="tr"></div><div class="bl"></div><div class="br b"></div></div>
+      <div class="rc">
+        <h4>蒜山高原 SA</h4>
+        <div class="rr"><span>領収書</span></div>
+        <div class="rr"><span>2026/05/16</span><span>12:17</span></div>
+        <div class="rr"><span>ひるぜん牛乳もち</span><span>610</span></div>
+        <div class="rr"><span>よもぎ若草3入</span><span>865</span></div>
+        <div class="rr"><span>せんじ肉…</span><span>1,080</span></div>
+        <div class="rr"><span>キャラクター玩具</span><span>1,000</span></div>
+        <div class="rt"><div class="rr"><span>合計</span><span>¥3,555</span></div></div>
+      </div>
     </div>
-  </aside>
-</div>
+    <div class="cambottom">
+      <div class="cbs">アルバム</div>
+      <div class="shutter" id="shutter-btn" onclick="goPV('confirm')"></div>
+      <div class="cbs">切替</div>
+    </div>
+  </div>
+
+  <!-- CONFIRM -->
+  <div class="pv vconf" data-pv="confirm">
+    <div class="sb lt" style="position:relative;z-index:5;padding-top:2px"><span>16:52</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
+    <div class="navb">
+      <span class="bk" onclick="goPV('camera')">‹</span>
+      <span class="nt">保存前の確認</span>
+      <span class="nm">⋮</span>
+    </div>
+    <div class="confbody">
+      <div class="rprev">
+        <div class="rpi">
+          <div class="smrc">
+            <h4>蒜山高原 SA</h4>
+            <div class="rr"><span>領収書</span></div>
+            <div class="rr"><span>2026/05/16</span><span>12:17</span></div>
+            <div class="rr"><span>ひるぜん牛乳もち</span><span>610</span></div>
+            <div class="rr"><span>よもぎ若草3入</span><span>865</span></div>
+            <div class="rr"><span>せんじ肉…</span><span>1,080</span></div>
+            <div class="rr"><span>キャラクター玩具</span><span>1,000</span></div>
+            <div class="rt"><div class="rr"><span>合計</span><span>¥3,555</span></div></div>
+          </div>
+        </div>
+        <div class="rot">↺</div>
+        <div class="reshot">再撮影</div>
+        <div class="padd">ページ追加</div>
+        <div class="pcount">1/1</div>
+      </div>
+      <div class="fsec">
+        <div class="fl">保存先のフォルダ</div>
+        <div class="fsel" id="folder-sel">
+          <span class="fn">（310）レシート（紙）</span>
+          <button class="fbt">選択</button>
+        </div>
+      </div>
+      <div class="fsec">
+        <div class="fl">購入の事由</div>
+        <textarea class="rea" id="reason-area" placeholder="【旅費】出張目的、交通機関、乗車区間等&#10;【飲食代】開催目的、参加者（人数）等&#10;【経費等】購入事由等">手土産</textarea>
+      </div>
+      <button class="savebtn" id="save-btn" onclick="goPV('uploading');startUpload()">保存</button>
+    </div>
+  </div>
+
+  <!-- UPLOADING -->
+  <div class="pv vupl" data-pv="uploading">
+    <div class="sb lt" style="position:relative;z-index:5;padding-top:2px"><span>16:52</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
+    <div class="navb"><span class="nt">保存前の確認</span><span class="nm">⋮</span></div>
+    <div style="flex:1;padding:12px;overflow:auto;">
+      <div class="rprev" style="margin-bottom:8px;">
+        <div class="rpi" style="height:120px;">
+          <div class="smrc">
+            <h4>蒜山高原 SA</h4>
+            <div class="rr"><span>合計</span><span>¥3,555</span></div>
+          </div>
+        </div>
+        <div class="rot">↺</div>
+        <div class="padd">ページ追加</div>
+        <div class="pcount">1/1</div>
+      </div>
+      <div class="fsec"><div class="fl">保存先のフォルダ</div>
+        <div class="fsel"><span class="fn">（310）レシート（紙）</span><button class="fbt">選択</button></div>
+      </div>
+      <div class="fsec"><div class="fl">購入の事由</div>
+        <div style="border:1px solid var(--line);border-radius:8px;padding:9px;font-size:13px;background:#fff;">手土産</div>
+      </div>
+    </div>
+    <div class="upl-overlay">
+      <div class="upl-dialog">
+        <div class="upl-spin"></div>
+        <p>アップロード中です。<br>しばらくお待ちください…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="pv vlist" data-pv="list">
+    <div class="sb lt" style="position:relative;z-index:5;padding-top:2px;background:#fff;"><span>16:53</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
+    <div class="listhdr">
+      <span class="hbg">≡</span>
+      <span class="ht">書類</span>
+    </div>
+    <div class="listbody">
+      <div class="fdd">
+        <span>（310）レシート（紙）</span>
+        <span class="fa">▾</span>
+      </div>
+      <div class="rcard" id="card1" onclick="goPV('detail')" style="cursor:pointer;">
+        <div class="rth">
+          <div class="trc">
+            <div style="text-align:center;font-size:4px;font-weight:700;">蒜山高原</div>
+            <div style="display:flex;justify-content:space-between;"><span>合計</span><span>¥3,555</span></div>
+          </div>
+        </div>
+        <div class="ri">
+          <div class="rd">2026/05/16</div>
+          <div class="rs">株式会社でりかエッセン</div>
+          <div class="ra">3,555円</div>
+          <div class="rrs">手土産</div>
+        </div>
+      </div>
+      <div class="rcard">
+        <div class="rth">
+          <div class="trc">
+            <div style="text-align:center;font-size:4px;font-weight:700;">TRIAL</div>
+            <div style="display:flex;justify-content:space-between;"><span>合計</span><span>¥12,188</span></div>
+          </div>
+        </div>
+        <div class="ri">
+          <div class="rd">2026/05/03</div>
+          <div class="rs">株式会社トライアルス…</div>
+          <div class="ra">12,188円</div>
+          <div class="rrs">テスト 約25cm</div>
+        </div>
+      </div>
+    </div>
+    <button class="fab">📷 追加</button>
+    <div class="toast" id="list-toast"><div class="tc">✓</div>保存しました。</div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="pv vdet" data-pv="detail">
+    <div class="sb lt" style="position:relative;z-index:5;padding-top:2px;"><span>16:53</span><div class="r">●&nbsp;5G+&nbsp;▮▮</div></div>
+    <div class="detnav">
+      <span class="db" onclick="goPV('list')">‹</span>
+      <span class="dt">取引内容</span>
+      <button class="ds" id="det-save-btn" onclick="showDetToast()">保存</button>
+      <span class="dm">⋮</span>
+    </div>
+    <div class="detbody">
+      <div class="rimgblk">
+        <div class="rbi">
+          <h4>蒜山高原 SA</h4>
+          <div class="rr"><span>2026/05/16</span><span>12:17</span></div>
+          <div class="rr"><span>ひるぜん牛乳もち</span><span>610</span></div>
+          <div class="rr"><span>よもぎ若草3入</span><span>865</span></div>
+          <div class="rr"><span>せんじ肉…</span><span>1,080</span></div>
+          <div class="rr"><span>玩具</span><span>1,000</span></div>
+          <div class="rt"><div class="rr"><span>合計</span><span>¥3,555</span></div></div>
+        </div>
+        <div class="pbadge">1/1</div>
+        <div class="exp">⤢</div>
+      </div>
+      <div class="detform">
+        <div class="df">
+          <label>取引先名</label>
+          <input type="text" value="株式会社でりかエッセン"/>
+        </div>
+        <div style="font-size:11px;font-weight:700;margin-bottom:6px;color:#444;">税率別の明細</div>
+        <div class="taxsec">
+          <div class="df"><label>税率</label><select><option>10%対象金額</option><option>軽8%対象金額</option></select></div>
+          <div class="df"><label>取引金額（税込み）</label><input type="text" value="1,000"/></div>
+          <div class="df"><label>消費税等</label><input type="text" value="90"/></div>
+          <div class="df"><label>元帳摘要</label><input type="text" value="手土産"/></div>
+        </div>
+        <div class="taxsec">
+          <div class="df"><label>税率</label><select><option>軽8%対象金額</option><option>10%対象金額</option></select></div>
+          <div class="df"><label>取引金額（税込み）</label><input type="text" value="2,555"/></div>
+          <div class="df"><label>消費税等</label><input type="text" value="189"/></div>
+          <div class="df"><label>元帳摘要</label><input type="text" value="手土産"/></div>
+          <div style="text-align:right;"><button style="background:#fff;border:1px solid #ccc;border-radius:5px;padding:4px 10px;font-size:10px;cursor:pointer;">明細を削除</button></div>
+        </div>
+        <button class="addtax">＋ 税率別の明細を追加</button>
+        <div class="trow"><span class="tl">取引金額計</span><span class="tv">3,555円</span></div>
+        <div class="trow"><span class="tl">消費税等計</span><span class="tv">279円</span></div>
+        <div class="df" style="margin-top:8px;"><label>事業者登録番号</label><input type="text" value="T 9260001004577"/></div>
+      </div>
+    </div>
+    <button class="nxtdoc">次の書類 ›</button>
+    <div class="toast" id="det-toast" style="display:none"><div class="tc">✓</div>保存しました。</div>
+  </div>
+
+  <!-- TOUR OVERLAY (phone) -->
+  <div class="tovl" id="phoneOvl">
+    <svg viewBox="0 0 318 678" preserveAspectRatio="none">
+      <defs><mask id="hm"><rect width="318" height="678" fill="white"/><rect id="hole" x="0" y="0" width="0" height="0" rx="8" fill="black"/></mask></defs>
+      <rect fill="rgba(10,20,40,.55)" width="318" height="678" mask="url(#hm)"/>
+    </svg>
+    <div class="tpulse" id="tpulse" style="display:none"></div>
+    <div class="tcall" id="tcall">
+      <h4 id="tcall-title"></h4>
+      <p id="tcall-body"></p>
+      <div class="tca"><span class="tno" id="tcall-no"></span><div class="tbtns"><button class="tsk" onclick="endTour()">スキップ</button><button class="tpv" onclick="prevStep()">戻る</button><button class="tnx" id="tcall-next" onclick="nextStep()">次へ</button></div></div>
+    </div>
+  </div>
+
+ </div><!-- /ps -->
+</div><!-- /phone -->
+
+<!-- ===== FX CLOUD ===== -->
+<div class="fx-panel" style="position:relative;">
+  <div class="fxbbar">
+    <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+    <div class="url">https://service.e21.jp/fxmaistar/</div>
+  </div>
+  <div class="fxwrap" id="fxWrap">
+    <!-- TOP BAR -->
+    <div class="fxtop">
+      <div class="logo">
+        <span class="logofx">FX</span><span class="logorest">まいスタークラウド</span>
+        <span class="certbadge">インボイス制度・電帳法対応済</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="userinfo">（21194/777）株式会社きなこ本舗　松本 考史 ▼</span>
+        <button class="sysbtn">システム終了</button>
+      </div>
+    </div>
+    <!-- NAV BAR -->
+    <div class="fxnav">
+      <div class="fxni">導入・運用支援画面</div>
+      <div class="fxni">処理速度の確認</div>
+      <div class="fxni">⑦ 処理速度が遅いと思ったら</div>
+      <div class="fxni">♥ 基本操作ガイド</div>
+      <div class="fxni">💬</div>
+      <div class="fxni">?</div>
+    </div>
+    <!-- MAIN -->
+    <div class="fxmain">
+      <!-- SIDEBAR -->
+      <div class="fxsidebar">
+        <div class="fxsb-hdr">給与メニュー</div>
+        <div class="fxsb-item" onclick="goFX('fx-home')"><span>🏠 ホーム</span></div>
+        <div class="fxsb-item"><span>📊 業績管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item act" id="sb-shouhyo"><span>🔖 証憑管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>📒 財務会計</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>🛒 販売管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>📁 電子帳簿</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>⚙ 設定(共通)</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>⚙ 設定(財務)</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>📖 ご利用ガイド</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>⬇ ダウンロード</span></div>
+      </div>
+      <!-- CONTENT -->
+      <div class="fxcnt" id="fxContent">
+
+        <!-- FX HOME -->
+        <div class="fxv on" id="fxv-home">
+          <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:3px;padding:7px 10px;font-size:10px;margin-bottom:10px;cursor:pointer;">⚠ お知らせが3件あります。クリックして確認してください &rsaquo;</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:13px;font-weight:700;">よく使うメニュー</div>
+            <div style="font-size:10px;color:var(--fbl);cursor:pointer;">⚙ よく使うメニューの編集</div>
+          </div>
+          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">📒 財務会計</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レシート入力方式 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">仕訳辞書からの入力 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">現金出納帳 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">預金出納帳 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">複合仕訳 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">銀行信販データ受信 <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レジからのデータ受信 <span style="color:var(--fbl);">▶</span></div>
+            <div id="menu-shouhyo" style="background:#fffaed;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;border:2px solid transparent;" onclick="goFX('fx-folders')"><b>証憑からの仕訳計上</b> <span style="color:var(--fbl);">▶</span></div>
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">TKCシステム自動仕訳 <span style="color:var(--fbl);">▶</span></div>
+          </div>
+          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">🔖 証憑管理</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">証憑保存機能の起動 <span style="color:var(--fbl);">▶</span></div>
+          </div>
+        </div>
+
+        <!-- FX FOLDERS -->
+        <div class="fxv" id="fxv-folders">
+          <div class="fxbc"><a onclick="goFX('fx-home')">ホーム</a> &gt; 証憑からの仕訳計上</div>
+          <div style="display:flex;justify-content:flex-end;margin-bottom:8px;"><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 10px;font-size:10px;cursor:pointer;">仕訳ルールの確認</button></div>
+          <table class="ftbl">
+            <thead><tr><th>フォルダ</th><th>最新のデータ受信状況</th><th>受信済データ（仕訳未計上）</th></tr></thead>
+            <tbody>
+              <tr><td style="text-align:left;">請求書（電子）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">請求書（紙）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">領収書（電子）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">領収書（紙）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr style="background:#fffef0"><td style="text-align:left;font-weight:700;">レシート（紙）</td><td>成功 05/21 17:01</td><td><b>1件</b> <button class="btnd" id="btn-receipt-data" onclick="goFX('fx-list')">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">その他（電子）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">その他（紙）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">立替経費（松本考史 紙）</td><td>成功 05/21 17:01</td><td><b>2件</b> <button class="btnd">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">立替経費（松本考史 電子）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+              <tr><td style="text-align:left;">立替経費（清崎達路 紙）</td><td>成功 05/21 17:01</td><td>0件 <button class="btnd off">▶ データ確認</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FX LIST (受信データ一覧) -->
+        <div class="fxv" id="fxv-list">
+          <div class="fxbc"><a onclick="goFX('fx-home')">ホーム</a> &gt; <a onclick="goFX('fx-folders')">証憑からの仕訳計上</a> &gt; 受信データ一覧</div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px;">（310）レシート（紙）</div>
+          <div class="fxinfo"><span class="ii">ℹ</span><span>今回受信したデータの一覧です。既に仕訳を入力済みのものは「計上対象」のチェックを外し、今回仕訳を計上するデータを確定してください</span></div>
+          <div style="overflow:auto;">
+            <table class="ftbl" style="min-width:600px;">
+              <thead><tr><th style="width:40px;">計上<br>対象</th><th style="width:30px;">証憑</th><th>月日</th><th>証憑番号</th><th>取引先名</th><th>取引金額</th><th>事業者登録番号</th><th>登録日時</th><th>備考</th></tr></thead>
+              <tbody>
+                <tr class="active-row"><td><input type="checkbox" checked id="check-item"/></td><td>📎</td><td>05/16</td><td>1640</td><td style="text-align:left;">株式会社でりかエッセン</td><td>3,555</td><td>T9260001004577</td><td>2026/05/21 16:52</td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:10px;text-align:right;"><button class="btnkd" id="btn-kakutei" onclick="goFX('fx-journal')">計上対象データの確定</button></div>
+        </div>
+
+        <!-- FX JOURNAL (計上対象仕訳一覧) -->
+        <div class="fxv" id="fxv-journal">
+          <div class="fxbc"><a onclick="goFX('fx-home')">ホーム</a> &gt; <a onclick="goFX('fx-folders')">証憑からの仕訳計上</a> &gt; <a onclick="goFX('fx-list')">受信データ一覧</a> &gt; 計上対象仕訳一覧</div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+            <span>（310）レシート（紙）</span>
+            <div style="display:flex;gap:4px;"><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 8px;font-size:10px;cursor:pointer;">ルール再適用</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">⚙</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">?</button></div>
+          </div>
+          <div class="fxinfo"><span class="ii">ℹ</span>計上する仕訳を選択してください</div>
+          <div class="jsel-bar">
+            <span class="jsl">選択した仕訳を</span>
+            <button class="btnkej" id="btn-keijo" onclick="goFX('fx-done')">計上</button>
+            <span style="font-size:10px;color:var(--muted);">1000件/頁 ▾</span>
+          </div>
+          <div style="overflow:auto;">
+            <table class="jtbl" style="min-width:700px;">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="width:24px;"></th>
+                  <th rowspan="2">証憑</th>
+                  <th rowspan="2">月日</th>
+                  <th rowspan="2">伝票番号<br>証憑番号</th>
+                  <th colspan="3">借方</th>
+                  <th colspan="3">貸方</th>
+                  <th rowspan="2">取引先名<br>元帳摘要</th>
+                  <th rowspan="2">実際の<br>仕入年月日</th>
+                  <th rowspan="2">収支<br>区分</th>
+                </tr>
+                <tr>
+                  <th>勘定科目名<br>口座名</th><th>税区<br>税率</th><th>取引金額<br>（内、消費税等）</th>
+                  <th>勘定科目名<br>口座名</th><th>税区<br>税率</th><th>取引金額<br>（内、消費税等）</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="jrow"><td><input type="checkbox" id="jcheck1" checked/></td><td rowspan="2">📎</td><td>05/16</td><td rowspan="2">1640</td><td>接待交際費</td><td>5<br>10%A</td><td>1,000<br>(91)</td><td>現金</td><td>0</td><td>1,000</td><td style="text-align:left;">株式会社でりかエッセン<br>手土産</td><td></td><td></td></tr>
+                <tr class="jrow"><td><input type="checkbox" checked/></td><td></td><td>接待交際費</td><td>5<br>軽8%A</td><td>2,555<br>(189)</td><td>現金</td><td>0</td><td>2,555</td><td style="text-align:left;">株式会社でりかエッセン<br>手土産</td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FX DONE -->
+        <div class="fxv" id="fxv-done">
+          <div class="fxbc"><a onclick="goFX('fx-home')">ホーム</a> &gt; <a onclick="goFX('fx-folders')">証憑からの仕訳計上</a> &gt; <a onclick="goFX('fx-list')">受信データ一覧</a> &gt; 計上対象仕訳一覧</div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:6px;">（310）レシート（紙）</div>
+          <div class="fxinfo"><span class="ii">ℹ</span>計上対象の仕訳はありません</div>
+          <div class="jsel-bar"><span class="jsl">選択した仕訳を</span><button class="btnkej" disabled>計上</button></div>
+          <table class="jtbl">
+            <thead><tr><th></th><th>証憑</th><th>月日</th><th>伝票番号<br>証憑番号</th><th>借方 勘定科目</th><th>税区/税率</th><th>取引金額</th><th>貸方 勘定科目</th><th>税区/税率</th><th>取引金額</th><th>取引先名/元帳摘要</th><th>実際の仕入年月日</th><th>収支区分</th></tr></thead>
+            <tbody><tr><td colspan="13" style="padding:20px;color:#888;text-align:center;">（計上対象の仕訳はありません）</td></tr></tbody>
+          </table>
+          <div class="fx-done-msg">✅ 仕訳の計上が完了しました。FXクラウドに登録されました。</div>
+          <div style="text-align:center;"><button style="background:var(--fg);color:#fff;border:0;border-radius:5px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="restartTour()">最初からやり直す</button></div>
+        </div>
+
+      </div><!-- /fxContent -->
+    </div><!-- /fxmain -->
+  </div><!-- /fxwrap -->
+
+  <!-- FX TOUR OVERLAY -->
+  <div class="fxovl" id="fxOvl">
+    <svg viewBox="0 0 100% 100%" preserveAspectRatio="none" id="fxSvg" style="position:absolute;inset:0;width:100%;height:100%;">
+      <defs><mask id="fxhm"><rect width="10000" height="10000" fill="white"/><rect id="fxhole" x="0" y="0" width="0" height="0" rx="5" fill="black"/></mask></defs>
+      <rect id="fxdim" fill="rgba(10,20,40,.55)" width="10000" height="10000" mask="url(#fxhm)"/>
+    </svg>
+    <div class="tpulse" id="fxtpulse" style="display:none"></div>
+    <div class="tcall" id="fxtcall" style="display:none">
+      <h4 id="fxtcall-title"></h4>
+      <p id="fxtcall-body"></p>
+      <div class="tca"><span class="tno" id="fxtcall-no"></span><div class="tbtns"><button class="tsk" onclick="endTour()">スキップ</button><button class="tpv" onclick="prevStep()">戻る</button><button class="tnxf" onclick="nextStep()">次へ</button></div></div>
+    </div>
+  </div>
+
+</div><!-- /fx-panel -->
+
+<!-- ===== TOUR PANEL ===== -->
+<aside class="tpanel">
+  <h2>📘 ガイドツアー</h2>
+  <ol class="slist" id="stepList"></ol>
+  <div class="tact">
+    <button class="tstart" onclick="restartTour()">▶ ツアー開始</button>
+    <button class="tfree" onclick="endTour()">自由操作</button>
+  </div>
+  <div class="tnote">※本ツールは「スマホで経費」および「FXまいスタークラウド」の利用イメージを公開情報・実機録画をもとに再現した体験デモです。</div>
+</aside>
+
+</div><!-- /stage -->
 
 <script>
-/* ===== view switching ===== */
-function goto(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  const target = document.querySelector(`.view[data-view="${name}"]`);
-  if(target) target.classList.add('active');
-  // when entering form from ocr, give the OCR animation a moment
-  if(name==='form'){ /* nothing extra */ }
-  // if tour step is bound to a view, reposition the spotlight
+/* ===== state ===== */
+let curPV='home', curFX='fx-home';
+let tourActive=false, stepIdx=0;
+
+function goPV(name){
+  document.querySelectorAll('.pv').forEach(v=>v.classList.remove('on'));
+  const t=document.querySelector(`.pv[data-pv="${name}"]`);
+  if(t){t.classList.add('on');curPV=name;}
   if(tourActive) positionTour();
 }
-
-function startOcrTimer(){
-  // auto-advance from OCR view to form after ~2s
-  setTimeout(()=>{
-    if(document.querySelector('.view[data-view="ocr"]').classList.contains('active')){
-      goto('form');
-      if(tourActive) nextStepIfWaitingFor('ocr');
-    }
-  }, 2000);
+function goFX(name){
+  document.querySelectorAll('.fxv').forEach(v=>v.classList.remove('on'));
+  const t=document.getElementById(name);
+  if(t){t.classList.add('on');curFX=name;}
+  if(tourActive) positionTour();
+}
+function startUpload(){
+  setTimeout(()=>{goPV('list');if(tourActive)nextStepIfAt('uploading');},2000);
+}
+function showDetToast(){
+  const t=document.getElementById('det-toast');
+  t.style.display='flex';
+  setTimeout(()=>{t.style.display='none';},2200);
+  if(tourActive) setTimeout(()=>nextStep(),600);
 }
 
-/* ===== tour engine ===== */
-const steps = [
-  {
-    view:'home',
-    target:'#tile-camera',
-    title:'① レシート撮影から始めます',
-    body:'ホーム画面の「レシート撮影」をタップします。スマホで撮るだけで経費登録が始まります。',
-    advanceOnClick:'#tile-camera'
-  },
-  {
-    view:'menu',
-    target:'#tile-shoot',
-    title:'② カメラで撮影を選択',
-    body:'撮影方法を選びます。今回は「カメラで撮影する」を選択します。',
-    advanceOnClick:'#tile-shoot'
-  },
-  {
-    view:'camera',
-    target:'#shutter',
-    title:'③ シャッターボタンを押す',
-    body:'レシートを枠内に収めて撮影します。手ぶれしても自動補正されます。',
-    advanceOnClick:'#shutter'
-  },
-  {
-    view:'ocr',
-    target:null,
-    title:'④ AIが自動で読み取り',
-    body:'数秒で「日付・店名・金額・税率」を読み取ります。手入力はほぼ不要です。',
-    waitFor:'ocr'
-  },
-  {
-    view:'form',
-    target:'#field-account',
-    title:'⑤ 勘定科目だけ確認',
-    body:'OCR結果が入力済みです。勘定科目を確認・必要なら変更します。摘要も自動で候補が入ります。',
-    next:true
-  },
-  {
-    view:'form',
-    target:'#btn-submit',
-    title:'⑥ 申請ボタンを押す',
-    body:'内容を確認したら「申請する」をタップ。承認者にすぐ通知されます。',
-    advanceOnClick:'#btn-submit'
-  },
-  {
-    view:'done',
-    target:null,
-    title:'⑦ 申請完了！',
-    body:'これで経費精算が完了です。撮影から30秒以内。月末にまとめて入力する必要はもうありません。',
-    next:true,
-    final:true
-  }
+/* ===== STEPS ===== */
+const steps=[
+  // PHONE steps
+  {side:'phone',pv:'home',   target:'#app-icon-btn', title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」のアイコンをタップして起動します。外出先で受け取ったレシートをすぐに登録できます。',advance:'#app-icon-btn'},
+  {side:'phone',pv:'camera', target:'#shutter-btn', title:'② レシートを撮影',body:'カメラが起動します。枠内にレシートを収めてシャッターボタンをタップ。手ぶれ補正も自動でかかります。',advance:'#shutter-btn'},
+  {side:'phone',pv:'confirm',target:'#save-btn',    title:'③ 保存前の確認',body:'撮影したレシートを確認。「保存先のフォルダ」と「購入の事由」を入力して「保存」をタップします。',advance:'#save-btn'},
+  {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',waitFor:'uploading'},
+  {side:'phone',pv:'list',   target:'#card1',       title:'⑤ 書類一覧で確認',body:'「保存しました」のトーストが表示され、書類一覧にレシートが追加されました。レシートをタップして取引内容を確認できます。',advance:'#card1'},
+  {side:'phone',pv:'detail', target:'#det-save-btn',title:'⑥ OCRデータを確認・保存',body:'OCRで読み取られた「取引先名・税率・金額・消費税・元帳摘要」が自動入力されています。確認して「保存」をタップ。',advance:'#det-save-btn'},
+  // FX steps
+  {side:'fx',fxv:'fx-home',  target:'#menu-shouhyo', title:'⑦ 証憑からの仕訳計上を選択',body:'FXクラウド（経理担当者側）のホーム画面です。財務会計メニューの「証憑からの仕訳計上」をクリックします。',advance:'#menu-shouhyo'},
+  {side:'fx',fxv:'fx-folders',target:'#btn-receipt-data',title:'⑧ レシート（紙）を確認',body:'フォルダ一覧が表示されます。スマホでアップロードした「レシート（紙）」に1件のデータが届いています。「データ確認」をクリック。',advance:'#btn-receipt-data'},
+  {side:'fx',fxv:'fx-list',  target:'#btn-kakutei',  title:'⑨ 計上対象データを確定',body:'受信したレシートデータの一覧です。株式会社でりかエッセン・3,555円・事業者登録番号まで自動取得済みです。「計上対象データの確定」をクリック。',advance:'#btn-kakutei'},
+  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',advance:'#btn-keijo'},
+  {side:'fx',fxv:'fx-done',  target:null,            title:'⑪ 計上完了！',body:'仕訳がFXクラウドに登録されました！レシート撮影から仕訳計上まで、スマホ側・PC側合わせて約1分で完了。',final:true},
 ];
 
-let stepIdx = 0;
-let tourActive = false;
-let waitingFor = null;
-
 function renderStepList(){
-  const ol = document.getElementById('stepList');
-  ol.innerHTML = steps.map((s,i)=>{
-    const cls = (i===stepIdx && tourActive)?'current':(i<stepIdx?'done':'');
-    return `<li class="${cls}" onclick="jumpTo(${i})"><span class="n">${i+1}</span>${s.title.replace(/^[①-⑨]\s*/,'')}</li>`;
-  }).join('');
+  const ol=document.getElementById('stepList');
+  const phoneLabel='<li class="pl">📱 スマホで経費</li>';
+  const fxLabel='<li class="pl">🖥 FXクラウド（経理担当者）</li>';
+  let html=phoneLabel;
+  steps.forEach((s,i)=>{
+    if(i===6) html+=fxLabel;
+    const cls=`${s.side==='fx'?'fs':'ps'} ${i===stepIdx&&tourActive?'cur':''} ${i<stepIdx?'dn':''}`;
+    html+=`<li class="${cls}" onclick="jumpTo(${i})"><span class="n">${i+1}</span>${s.title.replace(/^[①-⑪]\s*/,'')}</li>`;
+  });
+  ol.innerHTML=html;
 }
 
 function startTour(){
-  tourActive = true;
-  stepIdx = 0;
-  document.getElementById('tourMask').style.display='block';
+  tourActive=true;stepIdx=0;
+  goPV('home');goFX('fx-home');
+  document.getElementById('phoneOvl').classList.add('on');
   showStep();
 }
 function endTour(){
-  tourActive = false;
-  waitingFor = null;
-  document.getElementById('tourMask').style.display='none';
+  tourActive=false;
+  document.getElementById('phoneOvl').classList.remove('on');
+  document.getElementById('fxOvl').classList.remove('on');
   renderStepList();
 }
-function restartTour(){
-  goto('home');
-  startTour();
-}
+function restartTour(){goPV('home');goFX('fx-home');startTour();}
 function jumpTo(i){
-  if(!tourActive) startTour();
-  stepIdx = i;
-  goto(steps[i].view);
+  if(!tourActive){tourActive=true;}
+  stepIdx=i;const s=steps[i];
+  if(s.side==='phone'){goPV(s.pv);goFX('fx-home');}
+  else{goFX(s.fxv);}
   showStep();
 }
 function nextStep(){
-  if(stepIdx >= steps.length-1){ endTour(); return; }
+  if(stepIdx>=steps.length-1){endTour();return;}
   stepIdx++;
-  goto(steps[stepIdx].view);
+  const s=steps[stepIdx];
+  if(s.side==='phone'){goPV(s.pv);}
+  else{goFX(s.fxv);}
   showStep();
 }
 function prevStep(){
-  if(stepIdx===0) return;
+  if(stepIdx===0)return;
   stepIdx--;
-  goto(steps[stepIdx].view);
+  const s=steps[stepIdx];
+  if(s.side==='phone'){goPV(s.pv);}
+  else{goFX(s.fxv);}
   showStep();
 }
-function nextStepIfWaitingFor(view){
-  if(tourActive && waitingFor===view){
-    waitingFor = null;
-    nextStep();
-  }
+function nextStepIfAt(pv){
+  if(tourActive&&curPV===pv){setTimeout(()=>nextStep(),400);}
 }
 
 function showStep(){
   renderStepList();
-  const s = steps[stepIdx];
-  document.getElementById('tourTitle').textContent = s.title;
-  document.getElementById('tourBody').textContent = s.body;
-  document.getElementById('tourStepNo').textContent = `STEP ${stepIdx+1} / ${steps.length}`;
-  waitingFor = s.waitFor || null;
+  const s=steps[stepIdx];
+  const isPhone=s.side==='phone';
+  // toggle overlays
+  document.getElementById('phoneOvl').classList.toggle('on',isPhone);
+  document.getElementById('fxOvl').classList.toggle('on',!isPhone);
+  if(isPhone){
+    document.getElementById('tcall-title').textContent=s.title;
+    document.getElementById('tcall-body').textContent=s.body;
+    document.getElementById('tcall-no').textContent=`STEP ${stepIdx+1}/${steps.length}`;
+    document.getElementById('tcall-next').textContent=s.final?'完了':'次へ';
+  } else {
+    document.getElementById('fxtcall-title').textContent=s.title;
+    document.getElementById('fxtcall-body').textContent=s.body;
+    document.getElementById('fxtcall-no').textContent=`STEP ${stepIdx+1}/${steps.length}`;
+    document.getElementById('fxtcall').style.display='block';
+  }
   positionTour();
 }
 
 function positionTour(){
-  const s = steps[stepIdx];
-  const pulse = document.getElementById('tourPulse');
-  const callout = document.getElementById('tourCallout');
-  const screen = document.getElementById('screen');
-  const hole = document.getElementById('tourHole');
-  const sRect = screen.getBoundingClientRect();
+  const s=steps[stepIdx];
+  if(s.side==='phone') positionPhone(s);
+  else positionFX(s);
+}
 
+function positionPhone(s){
+  const ps=document.getElementById('phoneScreen');
+  const pr=ps.getBoundingClientRect();
+  const pW=pr.width,pH=pr.height;
+  const hole=document.getElementById('hole');
+  const pulse=document.getElementById('tpulse');
+  const call=document.getElementById('tcall');
   if(s.target){
-    const el = document.querySelector(s.target);
+    const el=document.querySelector(s.target);
     if(el){
-      const r = el.getBoundingClientRect();
-      const x = r.left - sRect.left - 6;
-      const y = r.top - sRect.top - 6;
-      const w = r.width + 12;
-      const h = r.height + 12;
-      pulse.style.display='block';
-      pulse.style.left = x+'px';
-      pulse.style.top = y+'px';
-      pulse.style.width = w+'px';
-      pulse.style.height = h+'px';
-      hole.setAttribute('x', x);
-      hole.setAttribute('y', y);
-      hole.setAttribute('width', w);
-      hole.setAttribute('height', h);
-
-      // callout placement: below if room, else above
-      const calloutH = 150;
-      const screenH = sRect.height;
-      let cTop = y + h + 12;
-      if(cTop + calloutH > screenH - 12){
-        cTop = y - calloutH - 12;
-      }
-      callout.style.top = Math.max(40, cTop) + 'px';
-      callout.style.left = '20px';
-      callout.style.right = '20px';
+      const er=el.getBoundingClientRect();
+      const x=er.left-pr.left-6,y=er.top-pr.top-6,w=er.width+12,h=er.height+12;
+      const sx=x/pW*318,sy=y/pH*678,sw=w/pW*318,sh=h/pH*678;
+      hole.setAttribute('x',sx);hole.setAttribute('y',sy);hole.setAttribute('width',sw);hole.setAttribute('height',sh);
+      pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
+      const cy=y+h+12;
+      call.style.top=Math.max(30,Math.min(cy,pH-160))+'px';
+      call.style.left='10px';call.style.right='10px';call.style.maxWidth='none';
     }
   } else {
+    hole.setAttribute('width',0);hole.setAttribute('height',0);
     pulse.style.display='none';
-    hole.setAttribute('width', 0);
-    hole.setAttribute('height', 0);
-    callout.style.top = '40%';
-    callout.style.left = '20px';
-    callout.style.right = '20px';
+    call.style.top='35%';call.style.left='14px';call.style.right='14px';call.style.maxWidth='none';
   }
 }
 
-/* advance on click handlers */
-document.addEventListener('click', (e)=>{
-  if(!tourActive) return;
-  const s = steps[stepIdx];
-  if(!s.advanceOnClick) return;
-  const t = e.target.closest(s.advanceOnClick);
-  if(t){
-    setTimeout(()=>{ if(tourActive) nextStep(); }, 250);
+function positionFX(s){
+  const fp=document.querySelector('.fx-panel');
+  const fr=fp.getBoundingClientRect();
+  const hole=document.getElementById('fxhole');
+  const pulse=document.getElementById('fxtpulse');
+  const call=document.getElementById('fxtcall');
+  call.style.display='block';
+  if(s.target){
+    const el=document.querySelector(s.target);
+    if(el){
+      const er=el.getBoundingClientRect();
+      const x=er.left-fr.left-6,y=er.top-fr.top-6,w=er.width+12,h=er.height+12;
+      hole.setAttribute('x',x);hole.setAttribute('y',y);hole.setAttribute('width',w);hole.setAttribute('height',h);
+      pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
+      const cy=y+h+12;
+      const maxY=fr.height-180;
+      call.style.top=Math.max(60,Math.min(cy,maxY))+'px';
+      call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
+    }
+  } else {
+    hole.setAttribute('width',0);hole.setAttribute('height',0);
+    pulse.style.display='none';
+    call.style.top='30%';call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
+  }
+}
+
+/* advance on click */
+document.addEventListener('click',e=>{
+  if(!tourActive)return;
+  const s=steps[stepIdx];
+  if(!s.advance)return;
+  if(e.target.closest(s.advance)){
+    setTimeout(()=>{if(tourActive)nextStep();},300);
   }
 });
-
-window.addEventListener('resize', ()=>{ if(tourActive) positionTour(); });
+window.addEventListener('resize',()=>{if(tourActive)positionTour();});
 
 /* boot */
 renderStepList();
-window.addEventListener('load', ()=>{
-  setTimeout(startTour, 400);
-});
+window.addEventListener('load',()=>setTimeout(startTour,500));
 </script>
 </body>
 </html>
