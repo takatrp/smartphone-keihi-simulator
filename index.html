@@ -695,13 +695,15 @@ function goFX(name){
   if(tourActive) positionTour();
 }
 function startUpload(){
-  setTimeout(()=>{goPV('list');if(tourActive)nextStepIfAt('uploading');},2000);
+  // ツアー中はステップ④の auto タイマーが画面遷移と進行を担うので、ここでは画面切替を行わない
+  if(tourActive) return;
+  setTimeout(()=>{goPV('list');},2000);
 }
 function showDetToast(){
   const t=document.getElementById('det-toast');
   t.style.display='flex';
   setTimeout(()=>{t.style.display='none';},2200);
-  if(tourActive) setTimeout(()=>nextStep(),600);
+  // ツアー中の進行は global click handler に任せる（二重発火防止）
 }
 
 /* ===== STEPS ===== */
@@ -710,7 +712,7 @@ const steps=[
   {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。',auto:1500},
   {side:'phone',pv:'camera', target:'#shutter-btn', title:'② レシートを撮影',body:'カメラが起動します。枠内にレシートを収めてシャッターボタンをタップ。手ぶれ補正も自動でかかります。',advance:'#shutter-btn'},
   {side:'phone',pv:'confirm',target:'#save-btn',    title:'③ 保存前の確認',body:'撮影したレシートを確認。「保存先のフォルダ」と「購入の事由」を入力して「保存」をタップします。',advance:'#save-btn'},
-  {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',waitFor:'uploading'},
+  {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',auto:2200},
   {side:'phone',pv:'list',   target:'#card1',       title:'⑤ 書類一覧で確認',body:'「保存しました」のトーストが表示され、書類一覧にレシートが追加されました。レシートをタップして取引内容を確認できます。',advance:'#card1'},
   {side:'phone',pv:'detail', target:'#det-save-btn',title:'⑥ OCRデータを確認・保存',body:'OCRで読み取られた「取引先名・税率・金額・消費税・元帳摘要」が自動入力されています。確認して「保存」をタップ。',advance:'#det-save-btn'},
   // FX steps
@@ -800,8 +802,9 @@ function showStep(){
     const myIdx=stepIdx;
     autoTimer=setTimeout(()=>{
       if(tourActive&&stepIdx===myIdx){
-        // simulate the home→camera transition
+        // simulate transitions before advancing
         if(s.pv==='home') goPV('camera');
+        if(s.pv==='uploading') goPV('list');
         nextStep();
       }
     },s.auto);
