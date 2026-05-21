@@ -24,11 +24,11 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .ph{max-width:1340px;width:100%;text-align:center;margin-bottom:14px;}
 .ph h1{font-size:21px;color:#1a3050;font-weight:800;}
 .ph p{font-size:12px;color:var(--muted);margin-top:3px;}
-.modesel{display:inline-flex;gap:0;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-top:10px;}
-.modesel-label{font-size:11px;color:var(--muted);font-weight:700;padding:0 10px 0 6px;letter-spacing:.04em;}
-.msbtn{padding:8px 18px;border-radius:7px;font-size:12.5px;font-weight:700;cursor:pointer;border:0;background:transparent;color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:5px;}
-.msbtn.act{background:var(--tb);color:#fff;box-shadow:0 2px 6px rgba(20,98,200,.3);}
-.msbtn:not(.act):hover{background:#f1f5fb;color:var(--tb);}
+.ph .phnote{font-size:11px;color:#b85a00;margin-top:6px;}
+.modesel{display:inline-flex;gap:18px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 16px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-top:10px;}
+.msopt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;}
+.msopt input[type=radio]{width:16px;height:16px;cursor:pointer;accent-color:var(--tb);}
+.msopt:hover{color:var(--tb);}
 .stage{display:flex;gap:18px;align-items:flex-start;justify-content:center;max-width:1340px;width:100%;flex-wrap:wrap;}
 
 /* ====== PHONE ====== */
@@ -270,7 +270,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .rotate-ovl{position:fixed;inset:0;background:linear-gradient(135deg,#0b3a6e 0%,#1462c8 100%);z-index:9999;display:none;align-items:center;justify-content:center;color:#fff;text-align:center;padding:24px;}
 .rotate-ovl.on{display:flex;}
 .rotate-box{max-width:320px;}
-.rotate-icon{font-size:90px;line-height:1;display:inline-block;animation:rotHint 2.2s ease-in-out infinite;margin-bottom:18px;}
+.rotate-icon{width:70px;height:110px;border:5px solid #fff;border-radius:12px;margin:0 auto 22px;position:relative;animation:rotHint 2.2s ease-in-out infinite;transform-origin:center;}
+.rotate-icon::before{content:"";position:absolute;left:50%;bottom:5px;transform:translateX(-50%);width:18px;height:4px;border-radius:2px;background:#fff;}
 @keyframes rotHint{0%,40%{transform:rotate(0deg)}60%,100%{transform:rotate(-90deg)}}
 .rotate-box h3{margin:0 0 10px;font-size:20px;}
 .rotate-box p{margin:0 0 18px;font-size:13px;line-height:1.7;color:#dde7f3;}
@@ -280,12 +281,12 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 </head>
 <body>
 <div class="ph">
-  <h1>📱 スマホで経費 × 🖥 FXクラウド 体験シミュレーター</h1>
+  <h1>スマホで経費 × FXクラウド 体験シミュレーター</h1>
   <p>レシート撮影からFXクラウドへの仕訳計上まで、実際の操作画面でガイド体験できます</p>
-  <div class="modesel" role="tablist">
-    <span class="modesel-label">モード</span>
-    <button class="msbtn act" id="msbtn-tour" onclick="restartTour()" role="tab">📘 ガイドツアー</button>
-    <button class="msbtn" id="msbtn-free" onclick="endTour()" role="tab">✋ 自由操作</button>
+  <p class="phnote">※操作イメージを伝えるために個人が作成したツールであり、実際の画面とは異なります。</p>
+  <div class="modesel" role="radiogroup">
+    <label class="msopt"><input type="radio" name="mode" id="msr-tour" checked onclick="restartTour()"><span>ガイドツアー</span></label>
+    <label class="msopt"><input type="radio" name="mode" id="msr-free" onclick="endTour()"><span>自由操作</span></label>
   </div>
 </div>
 
@@ -312,7 +313,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     <div class="camhdr">
       <div class="ch-home">⌂</div>
       <div class="ch-multi">▣ 複数ページ</div>
-      <div class="ch-gear">⚙</div>
+      <div class="ch-gear"></div>
     </div>
     <div class="camview">
       <div class="cam-hint">枠内に収まるように撮影してください</div>
@@ -449,8 +450,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
         </div>
       </div>
     </div>
-    <button class="fab">📷 追加</button>
-    <div class="toast" id="list-toast"><div class="tc">✓</div>保存しました。</div>
+    <button class="fab">追加</button>
+    <div class="toast" id="list-toast">保存しました。</div>
   </div>
 
   <!-- DETAIL -->
@@ -502,7 +503,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
       </div>
     </div>
     <button class="nxtdoc">次の書類 ›</button>
-    <div class="toast" id="det-toast" style="display:none"><div class="tc">✓</div>保存しました。</div>
+    <div class="toast" id="det-toast" style="display:none">保存しました。</div>
   </div>
 
   <!-- TOUR OVERLAY (phone) -->
@@ -545,8 +546,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
       <div class="fxni">導入・運用支援画面</div>
       <div class="fxni">処理速度の確認</div>
       <div class="fxni">⑦ 処理速度が遅いと思ったら</div>
-      <div class="fxni">♥ 基本操作ガイド</div>
-      <div class="fxni">💬</div>
+      <div class="fxni">基本操作ガイド</div>
+      <div class="fxni">お問合せ</div>
       <div class="fxni">?</div>
     </div>
     <!-- MAIN -->
@@ -554,28 +555,28 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
       <!-- SIDEBAR -->
       <div class="fxsidebar">
         <div class="fxsb-hdr">給与メニュー</div>
-        <div class="fxsb-item" onclick="goFX('fx-home')"><span>🏠 ホーム</span></div>
-        <div class="fxsb-item"><span>📊 業績管理</span><span class="sba">▾</span></div>
-        <div class="fxsb-item act" id="sb-shouhyo"><span>🔖 証憑管理</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>📒 財務会計</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>🛒 販売管理</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>📁 電子帳簿</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>⚙ 設定(共通)</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>⚙ 設定(財務)</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>📖 ご利用ガイド</span><span class="sba">▾</span></div>
-        <div class="fxsb-item"><span>⬇ ダウンロード</span></div>
+        <div class="fxsb-item" onclick="goFX('fx-home')"><span>ホーム</span></div>
+        <div class="fxsb-item"><span>業績管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item act" id="sb-shouhyo"><span>証憑管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>財務会計</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>販売管理</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>電子帳簿</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>設定(共通)</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>設定(財務)</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>ご利用ガイド</span><span class="sba">▾</span></div>
+        <div class="fxsb-item"><span>ダウンロード</span></div>
       </div>
       <!-- CONTENT -->
       <div class="fxcnt" id="fxContent">
 
         <!-- FX HOME -->
         <div class="fxv on" id="fxv-home">
-          <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:3px;padding:7px 10px;font-size:10px;margin-bottom:10px;cursor:pointer;">⚠ お知らせが3件あります。クリックして確認してください &rsaquo;</div>
+          <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:3px;padding:7px 10px;font-size:10px;margin-bottom:10px;cursor:pointer;">お知らせが3件あります。クリックして確認してください &rsaquo;</div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <div style="font-size:13px;font-weight:700;">よく使うメニュー</div>
-            <div style="font-size:10px;color:var(--fbl);cursor:pointer;">⚙ よく使うメニューの編集</div>
+            <div style="font-size:10px;color:var(--fbl);cursor:pointer;">よく使うメニューの編集</div>
           </div>
-          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">📒 財務会計</div>
+          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">財務会計</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レシート入力方式 <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">仕訳辞書からの入力 <span style="color:var(--fbl);">▶</span></div>
@@ -587,7 +588,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <div id="menu-shouhyo" style="background:#fffaed;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;border:2px solid transparent;" onclick="goFX('fx-folders')"><b>証憑からの仕訳計上</b> <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">TKCシステム自動仕訳 <span style="color:var(--fbl);">▶</span></div>
           </div>
-          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">🔖 証憑管理</div>
+          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">証憑管理</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">証憑保存機能の起動 <span style="color:var(--fbl);">▶</span></div>
           </div>
@@ -623,7 +624,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <table class="ftbl" style="min-width:600px;">
               <thead><tr><th style="width:40px;">計上<br>対象</th><th style="width:30px;">証憑</th><th>月日</th><th>証憑番号</th><th>取引先名</th><th>取引金額</th><th>事業者登録番号</th><th>登録日時</th><th>備考</th></tr></thead>
               <tbody>
-                <tr class="active-row"><td><input type="checkbox" checked id="check-item"/></td><td>📎</td><td>05/16</td><td>1640</td><td style="text-align:left;">株式会社でりかエッセン</td><td>3,555</td><td>T9260001004577</td><td>2026/05/21 16:52</td><td></td></tr>
+                <tr class="active-row"><td><input type="checkbox" checked id="check-item"/></td><td></td><td>05/16</td><td>1640</td><td style="text-align:left;">株式会社でりかエッセン</td><td>3,555</td><td>T9260001004577</td><td>2026/05/21 16:52</td><td></td></tr>
               </tbody>
             </table>
           </div>
@@ -635,7 +636,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
           <div class="fxbc"><a onclick="goFX('fx-home')">ホーム</a> &gt; <a onclick="goFX('fx-folders')">証憑からの仕訳計上</a> &gt; <a onclick="goFX('fx-list')">受信データ一覧</a> &gt; 計上対象仕訳一覧</div>
           <div style="font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
             <span>（310）レシート（紙）</span>
-            <div style="display:flex;gap:4px;"><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 8px;font-size:10px;cursor:pointer;">ルール再適用</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">⚙</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">?</button></div>
+            <div style="display:flex;gap:4px;"><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 8px;font-size:10px;cursor:pointer;">ルール再適用</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">設定</button><button style="background:#fff;border:1px solid #ccc;border-radius:3px;padding:4px 6px;font-size:10px;cursor:pointer;">?</button></div>
           </div>
           <div class="fxinfo"><span class="ii">ℹ</span>計上する仕訳を選択してください</div>
           <div class="jsel-bar">
@@ -663,7 +664,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
                 </tr>
               </thead>
               <tbody>
-                <tr class="jrow"><td><input type="checkbox" id="jcheck1" checked/></td><td rowspan="2">📎</td><td>05/16</td><td rowspan="2">1640</td><td>接待交際費</td><td>5<br>10%A</td><td>1,000<br>(91)</td><td>現金</td><td>0</td><td>1,000</td><td style="text-align:left;">株式会社でりかエッセン<br>手土産</td><td></td><td></td></tr>
+                <tr class="jrow"><td><input type="checkbox" id="jcheck1" checked/></td><td rowspan="2"></td><td>05/16</td><td rowspan="2">1640</td><td>接待交際費</td><td>5<br>10%A</td><td>1,000<br>(91)</td><td>現金</td><td>0</td><td>1,000</td><td style="text-align:left;">株式会社でりかエッセン<br>手土産</td><td></td><td></td></tr>
                 <tr class="jrow"><td><input type="checkbox" checked/></td><td></td><td>接待交際費</td><td>5<br>軽8%A</td><td>2,555<br>(189)</td><td>現金</td><td>0</td><td>2,555</td><td style="text-align:left;">株式会社でりかエッセン<br>手土産</td><td></td><td></td></tr>
               </tbody>
             </table>
@@ -680,7 +681,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <thead><tr><th></th><th>証憑</th><th>月日</th><th>伝票番号<br>証憑番号</th><th>借方 勘定科目</th><th>税区/税率</th><th>取引金額</th><th>貸方 勘定科目</th><th>税区/税率</th><th>取引金額</th><th>取引先名/元帳摘要</th><th>実際の仕入年月日</th><th>収支区分</th></tr></thead>
             <tbody><tr><td colspan="13" style="padding:20px;color:#888;text-align:center;">（計上対象の仕訳はありません）</td></tr></tbody>
           </table>
-          <div class="fx-done-msg">✅ 仕訳の計上が完了しました。FXクラウドに登録されました。</div>
+          <div class="fx-done-msg">仕訳の計上が完了しました。FXクラウドに登録されました。</div>
           <div style="text-align:center;"><button style="background:var(--fg);color:#fff;border:0;border-radius:5px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="restartTour()">最初からやり直す</button></div>
         </div>
 
@@ -706,7 +707,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 <!-- ===== TOUR PANEL ===== -->
 <aside class="tpanel">
-  <h2>📘 ガイドツアー</h2>
+  <h2>ガイドツアー</h2>
   <ol class="slist" id="stepList"></ol>
   <div class="tnote">※本ツールは「スマホで経費」および「FXまいスタークラウド」の利用イメージを公開情報・実機録画をもとに再現した体験デモです。</div>
 </aside>
@@ -763,8 +764,8 @@ const steps=[
 
 function renderStepList(){
   const ol=document.getElementById('stepList');
-  const phoneLabel='<li class="pl">📱 スマホで経費</li>';
-  const fxLabel='<li class="pl">🖥 FXクラウド（経理担当者）</li>';
+  const phoneLabel='<li class="pl">スマホで経費</li>';
+  const fxLabel='<li class="pl">FXクラウド（経理担当者）</li>';
   let html=phoneLabel;
   steps.forEach((s,i)=>{
     if(i===6) html+=fxLabel;
@@ -775,10 +776,10 @@ function renderStepList(){
 }
 
 function updateModeButtons(){
-  const t=document.getElementById('msbtn-tour'),f=document.getElementById('msbtn-free');
+  const t=document.getElementById('msr-tour'),f=document.getElementById('msr-free');
   if(!t||!f)return;
-  t.classList.toggle('act',tourActive);
-  f.classList.toggle('act',!tourActive);
+  t.checked=tourActive;
+  f.checked=!tourActive;
 }
 function startTour(){
   tourActive=true;stepIdx=0;
@@ -956,7 +957,7 @@ window.addEventListener('load',()=>setTimeout(()=>{startTour();updateRotateOvl()
 <!-- ===== スマホ横向き案内ポップアップ ===== -->
 <div class="rotate-ovl" id="rotateOvl">
   <div class="rotate-box">
-    <div class="rotate-icon">📱</div>
+    <div class="rotate-icon" aria-hidden="true"></div>
     <h3>スマホを横向きにしてください</h3>
     <p>ここから先は経理担当者の<br>PC画面（FXクラウド）を操作します。<br>横向きにすると見やすくなります。</p>
     <button onclick="document.getElementById('rotateOvl').classList.remove('on');">このまま続ける</button>
