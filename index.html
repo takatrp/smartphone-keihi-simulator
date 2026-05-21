@@ -690,7 +690,9 @@ function goPV(name){
 }
 function goFX(name){
   document.querySelectorAll('.fxv').forEach(v=>v.classList.remove('on'));
-  const t=document.getElementById(name);
+  // 呼出側は 'fx-home' 形式、要素IDは 'fxv-home' 形式なので吸収する
+  const id = name.startsWith('fxv-') ? name : name.replace(/^fx-/, 'fxv-');
+  const t=document.getElementById(id);
   if(t){t.classList.add('on');curFX=name;}
   if(tourActive) positionTour();
 }
