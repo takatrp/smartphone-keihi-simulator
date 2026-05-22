@@ -166,20 +166,20 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxbbar .url{flex:1;background:#fff;border-radius:3px;padding:3px 8px;font-size:10px;color:#666;border:1px solid #ccc;}
 .fxwrap{min-height:500px;background:#f4f6fb;}
 /* FX top */
-.fxtop{background:var(--fx2-dark);border-bottom:none;padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
+.fxtop{background:#fff;border-bottom:1px solid #dde5ef;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
 .fxtop .logo{display:flex;align-items:center;gap:3px;}
-.fxtop .logofx{font-weight:900;font-size:14px;color:#78aee8;}
-.fxtop .logorest{font-size:11px;color:#c8d8ee;font-weight:600;}
-.fxtop .certbadge{font-size:8px;color:#78aee8;border:1px solid #5580b8;border-radius:2px;padding:1px 4px;margin-left:6px;}
-.fxtop .userinfo{font-size:10px;color:#b8cce4;}
+.fxtop .logofx{font-weight:900;font-size:14px;color:var(--fx2-blue);}
+.fxtop .logorest{font-size:11px;color:#2a3a50;font-weight:600;}
+.fxtop .certbadge{font-size:8px;color:var(--fx2-blue);border:1px solid var(--fx2-blue);border-radius:2px;padding:1px 4px;margin-left:6px;}
+.fxtop .userinfo{font-size:10px;color:#555;}
 .fxtop .sysbtn{background:var(--fx2-orange);color:#fff;border:0;border-radius:3px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;}
 /* FX main */
 .fxmain{display:flex;min-height:440px;}
-.fxsidebar{width:138px;background:var(--fx2-sb);border-right:none;flex:0 0 auto;}
-.fxsb-item{padding:8px 10px 8px 14px;font-size:11px;color:#c8dcf2;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent;}
-.fxsb-item:hover{background:rgba(255,255,255,.09);color:#fff;}
-.fxsb-item.act{background:rgba(255,255,255,.12);color:#fff;font-weight:700;border-left:3px solid #f5c200;}
-.fxsb-item .sba{color:rgba(255,255,255,.4);font-size:9px;}
+.fxsidebar{width:138px;background:#fff;border-right:1px solid #e2e8f0;flex:0 0 auto;}
+.fxsb-item{padding:8px 10px 8px 14px;font-size:11px;color:#2a3a50;cursor:pointer;border-bottom:1px solid #edf0f5;display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent;}
+.fxsb-item:hover{background:#f0f6ff;color:var(--fx2-blue);}
+.fxsb-item.act{background:#edf3fd;color:var(--fx2-blue);font-weight:700;border-left:3px solid var(--fx2-blue);}
+.fxsb-item .sba{color:#9aacbb;font-size:9px;}
 /* FX content */
 .fxcnt{flex:1;padding:10px;overflow:auto;background:#fff;}
 .fxbc{font-size:10px;color:#555;margin-bottom:8px;}
@@ -234,7 +234,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .tovl .tcall{pointer-events:auto;}
 .tpulse{position:absolute;border:2.5px solid #f59e0b;border-radius:9px;box-shadow:0 0 0 3px rgba(245,158,11,.28),0 0 18px rgba(245,158,11,.38);animation:tp 1.4s ease-in-out infinite;pointer-events:none;}
 @keyframes tp{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-.tcall{position:absolute;background:#fff;border-radius:11px;padding:11px 13px;box-shadow:0 8px 26px rgba(0,0,0,.22);max-width:230px;font-size:11px;line-height:1.55;border-top:3px solid #f59e0b;z-index:22;}
+.drag-bar{width:32px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 8px;cursor:grab;}
+.tcall{position:absolute;background:#fff;border-radius:11px;padding:11px 13px;box-shadow:0 8px 26px rgba(0,0,0,.22);max-width:230px;font-size:11px;line-height:1.55;border-top:3px solid #f59e0b;z-index:22;cursor:grab;user-select:none;}
 .tcall h4{margin:0 0 5px;font-size:12px;color:#1a3050;}
 .tcall p{margin:0 0 8px;color:var(--ink);}
 .tcall .tca{display:flex;justify-content:space-between;align-items:center;gap:3px;}
@@ -522,6 +523,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     </svg>
     <div class="tpulse" id="tpulse" style="display:none"></div>
     <div class="tcall" id="tcall">
+      <div class="drag-bar"></div>
       <h4 id="tcall-title"></h4>
       <p id="tcall-body"></p>
       <div class="tca"><span class="tno" id="tcall-no"></span><div class="tbtns"><button class="tsk" onclick="endTour()">スキップ</button><button class="tpv" onclick="prevStep()">戻る</button><button class="tnx" id="tcall-next" onclick="nextStep()">次へ</button></div></div>
@@ -695,6 +697,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     </svg>
     <div class="tpulse" id="fxtpulse" style="display:none"></div>
     <div class="tcall" id="fxtcall" style="display:none">
+      <div class="drag-bar"></div>
       <h4 id="fxtcall-title"></h4>
       <p id="fxtcall-body"></p>
       <div id="fxtcall-note" style="display:none;font-size:9.5px;color:#b85a00;background:#fff8ee;border-radius:4px;padding:5px 7px;margin-bottom:6px;line-height:1.55;"></div>
@@ -746,7 +749,7 @@ function showDetToast(){
 /* ===== STEPS ===== */
 const steps=[
   // PHONE steps
-  {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。',auto:1500,callPos:'top',illuminate:true},
+  {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。アイコンをタップして起動しましょう。',advance:'#app-icon-btn',callPos:'top',illuminate:true},
   {side:'phone',pv:'camera', target:'#shutter-btn', title:'② レシートを撮影',body:'カメラが起動します。枠内にレシートを収めてシャッターボタンをタップ。手ぶれ補正も自動でかかります。',advance:'#shutter-btn'},
   {side:'phone',pv:'confirm',target:'#save-btn',    title:'③ 保存前の確認',body:'撮影したレシートを確認。「保存先のフォルダ」と「購入の事由」を入力して「保存」をタップします。',advance:'#save-btn'},
   {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',auto:2200,callPos:'top'},
@@ -754,9 +757,9 @@ const steps=[
   {side:'phone',pv:'detail', target:'#det-save-btn',title:'⑥ OCRデータを確認・保存',body:'OCRで読み取られた「取引先名・税率・金額・消費税・元帳摘要」が自動入力されています。確認して「保存」をタップ。',advance:'#det-save-btn'},
   // FX steps
   {side:'fx',fxv:'fx-home',  target:'#menu-shouhyo', title:'⑦ 証憑からの仕訳計上を選択',body:'FXクラウド（経理担当者側）のホーム画面です。財務会計メニューの「証憑からの仕訳計上」をクリックします。',advance:'#menu-shouhyo'},
-  {side:'fx',fxv:'fx-folders',target:'#btn-receipt-data',title:'⑧ レシート（紙）を確認',body:'フォルダ一覧が表示されます。スマホでアップロードした「レシート（紙）」に1件のデータが届いています。「データ確認」をクリック。',advance:'#btn-receipt-data'},
+  {side:'fx',fxv:'fx-folders',target:'#btn-receipt-data',title:'⑧ レシート（紙）を確認',body:'フォルダ一覧が表示されます。スマホでアップロードした「レシート（紙）」に1件のデータが届いています。「データ確認」をクリック。',advance:'#btn-receipt-data',fxCallPos:'above'},
   {side:'fx',fxv:'fx-list',  target:'#btn-kakutei',  title:'⑨ 計上対象データを確定',body:'受信したレシートデータの一覧です。株式会社でりかエッセン・3,555円・事業者登録番号まで自動取得済みです。「計上対象データの確定」をクリック。',advance:'#btn-kakutei'},
-  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',note:'※初回は科目を指定する必要がありますが、仕訳ルールが作成されている場合は科目が初期表示されます。',advance:'#btn-keijo',fxCallPos:'bottom'},
+  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',note:'※初回は科目を指定する必要がありますが、仕訳ルールが作成されている場合は科目が初期表示されます。',advance:'#btn-keijo',fxCallPos:'top-right'},
   {side:'fx',fxv:'fx-done',  target:null,            title:'⑪ 計上完了！',body:'仕訳がFXクラウドに登録されました！レシート撮影から仕訳計上まで、スマホ側・PC側合わせて約1分で完了。',final:true},
 ];
 
@@ -934,15 +937,24 @@ function positionFX(s){
       const x=er.left-fr.left-6,y=er.top-fr.top-6,w=er.width+12,h=er.height+12;
       hole.setAttribute('x',x);hole.setAttribute('y',y);hole.setAttribute('width',w);hole.setAttribute('height',h);
       pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
-      // fxCallPos:'bottom' → ターゲットをハイライトしつつカードは下部固定
+      // fxCallPos による位置制御
       if(s.fxCallPos==='bottom'){
         call.style.top=(fr.height-220)+'px';
+        call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
+      } else if(s.fxCallPos==='above'){
+        // ターゲット行の上に表示（行テキストが隠れないよう）
+        call.style.top=Math.max(50,y-185)+'px';
+        call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
+      } else if(s.fxCallPos==='top-right'){
+        // 右上角に小さく固定（仕訳テーブルを隠さない）
+        call.style.top='80px';
+        call.style.left='auto';call.style.right='10px';call.style.maxWidth='210px';
       } else {
         const cy=y+h+12;
         const maxY=fr.height-220;
         call.style.top=Math.max(60,Math.min(cy,maxY))+'px';
+        call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
       }
-      call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
     }
   } else {
     hole.setAttribute('width',0);hole.setAttribute('height',0);
@@ -981,9 +993,59 @@ function updateRotateOvl(){
   }
 }
 
+/* ===== ドラッグ可能ポップアップ ===== */
+function makeDraggable(el, getContainer){
+  el.addEventListener('mousedown', function(e){
+    if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+    e.preventDefault();
+    const cr=getContainer().getBoundingClientRect();
+    const er=el.getBoundingClientRect();
+    let ox=er.left-cr.left, oy=er.top-cr.top;
+    let sx=e.clientX, sy=e.clientY;
+    el.style.right='auto';
+    el.style.cursor='grabbing';
+    function mm(e){
+      el.style.left=(ox+(e.clientX-sx))+'px';
+      el.style.top=(oy+(e.clientY-sy))+'px';
+    }
+    function mu(){
+      el.style.cursor='grab';
+      document.removeEventListener('mousemove',mm);
+      document.removeEventListener('mouseup',mu);
+    }
+    document.addEventListener('mousemove',mm);
+    document.addEventListener('mouseup',mu);
+  });
+  el.addEventListener('touchstart', function(e){
+    if(e.target.tagName==='BUTTON')return;
+    const t=e.touches[0];
+    const cr=getContainer().getBoundingClientRect();
+    const er=el.getBoundingClientRect();
+    let ox=er.left-cr.left, oy=er.top-cr.top;
+    let sx=t.clientX, sy=t.clientY;
+    el.style.right='auto';
+    function tm(e){
+      e.preventDefault();
+      const t=e.touches[0];
+      el.style.left=(ox+(t.clientX-sx))+'px';
+      el.style.top=(oy+(t.clientY-sy))+'px';
+    }
+    function te(){
+      document.removeEventListener('touchmove',tm);
+      document.removeEventListener('touchend',te);
+    }
+    document.addEventListener('touchmove',tm,{passive:false});
+    document.addEventListener('touchend',te);
+  },{passive:true});
+}
+
 /* boot */
 renderStepList();
-window.addEventListener('load',()=>setTimeout(()=>{startTour();updateRotateOvl();},500));
+window.addEventListener('load',()=>{
+  makeDraggable(document.getElementById('tcall'),()=>document.getElementById('phoneScreen'));
+  makeDraggable(document.getElementById('fxtcall'),()=>document.querySelector('.fx-panel'));
+  setTimeout(()=>{startTour();updateRotateOvl();},500);
+});
 </script>
 
 <!-- ===== スマホ横向き案内ポップアップ ===== -->
