@@ -708,6 +708,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     <div class="tcall" id="fxtcall" style="display:none">
       <h4 id="fxtcall-title"></h4>
       <p id="fxtcall-body"></p>
+      <div id="fxtcall-note" style="display:none;font-size:9.5px;color:#b85a00;background:#fff8ee;border-radius:4px;padding:5px 7px;margin-bottom:6px;line-height:1.55;"></div>
       <div class="tca"><span class="tno" id="fxtcall-no"></span><div class="tbtns"><button class="tsk" onclick="endTour()">スキップ</button><button class="tpv" onclick="prevStep()">戻る</button><button class="tnxf" onclick="nextStep()">次へ</button></div></div>
     </div>
   </div>
@@ -768,7 +769,7 @@ const steps=[
   {side:'fx',fxv:'fx-home',  target:'#menu-shouhyo', title:'⑦ 証憑からの仕訳計上を選択',body:'FXクラウド（経理担当者側）のホーム画面です。財務会計メニューの「証憑からの仕訳計上」をクリックします。',advance:'#menu-shouhyo'},
   {side:'fx',fxv:'fx-folders',target:'#btn-receipt-data',title:'⑧ レシート（紙）を確認',body:'フォルダ一覧が表示されます。スマホでアップロードした「レシート（紙）」に1件のデータが届いています。「データ確認」をクリック。',advance:'#btn-receipt-data'},
   {side:'fx',fxv:'fx-list',  target:'#btn-kakutei',  title:'⑨ 計上対象データを確定',body:'受信したレシートデータの一覧です。株式会社でりかエッセン・3,555円・事業者登録番号まで自動取得済みです。「計上対象データの確定」をクリック。',advance:'#btn-kakutei'},
-  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',advance:'#btn-keijo'},
+  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',note:'※初回は科目を指定する必要がありますが、仕訳ルールが作成されている場合は科目が初期表示されます。',advance:'#btn-keijo',fxCallPos:'bottom'},
   {side:'fx',fxv:'fx-done',  target:null,            title:'⑪ 計上完了！',body:'仕訳がFXクラウドに登録されました！レシート撮影から仕訳計上まで、スマホ側・PC側合わせて約1分で完了。',final:true},
 ];
 
@@ -864,6 +865,8 @@ function showStep(){
     document.getElementById('fxtcall-title').textContent=s.title;
     document.getElementById('fxtcall-body').textContent=s.body;
     document.getElementById('fxtcall-no').textContent=`STEP ${stepIdx+1}/${steps.length}`;
+    const fn=document.getElementById('fxtcall-note');
+    if(s.note){fn.textContent=s.note;fn.style.display='block';}else{fn.style.display='none';}
     document.getElementById('fxtcall').style.display='block';
   }
   // DOM更新後に位置計算（rAF×2で確実にレイアウト確定）
@@ -944,9 +947,14 @@ function positionFX(s){
       const x=er.left-fr.left-6,y=er.top-fr.top-6,w=er.width+12,h=er.height+12;
       hole.setAttribute('x',x);hole.setAttribute('y',y);hole.setAttribute('width',w);hole.setAttribute('height',h);
       pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
-      const cy=y+h+12;
-      const maxY=fr.height-180;
-      call.style.top=Math.max(60,Math.min(cy,maxY))+'px';
+      // fxCallPos:'bottom' → ターゲットをハイライトしつつカードは下部固定
+      if(s.fxCallPos==='bottom'){
+        call.style.top=(fr.height-220)+'px';
+      } else {
+        const cy=y+h+12;
+        const maxY=fr.height-220;
+        call.style.top=Math.max(60,Math.min(cy,maxY))+'px';
+      }
       call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
     }
   } else {
