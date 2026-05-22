@@ -18,6 +18,9 @@
   --tn:#0b3a6e;--tb:#1055a8;--tbtn:#1462c8;
   --fg:#507a44;--fgd:#3a5e30;--for:#d97800;--fbg:#f4f2e6;--fbl:#2070b8;
   --ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--bg:#dde5ef;
+  /* FX2クラウド カラースキーム */
+  --fx2-dark:#1b2d4f;--fx2-sb:#243860;--fx2-blue:#4472c4;--fx2-bord:#3257a8;
+  --fx2-orange:#e07800;--fx2-link:#2570b8;--fx2-row:#edf3fd;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;padding:16px 10px 80px;}
@@ -161,52 +164,47 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxbbar .dot{width:9px;height:9px;border-radius:50%;background:#ccc;}
 .fxbbar .dot.r{background:#ff6057;}.fxbbar .dot.y{background:#febc2e;}.fxbbar .dot.g{background:#28c840;}
 .fxbbar .url{flex:1;background:#fff;border-radius:3px;padding:3px 8px;font-size:10px;color:#666;border:1px solid #ccc;}
-.fxwrap{min-height:500px;background:var(--fbg);}
+.fxwrap{min-height:500px;background:#f4f6fb;}
 /* FX top */
-.fxtop{background:#fff;border-bottom:1px solid #ddd;padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
+.fxtop{background:var(--fx2-dark);border-bottom:none;padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
 .fxtop .logo{display:flex;align-items:center;gap:3px;}
-.fxtop .logofx{font-weight:900;font-size:13px;color:#1a5a9a;}
-.fxtop .logorest{font-size:10px;color:#444;}
-.fxtop .certbadge{font-size:8px;color:var(--for);border:1px solid var(--for);border-radius:2px;padding:1px 3px;margin-left:4px;}
-.fxtop .userinfo{font-size:10px;color:#555;}
-.fxtop .sysbtn{background:var(--for);color:#fff;border:0;border-radius:3px;padding:4px 8px;font-size:10px;font-weight:700;cursor:pointer;}
-/* FX nav */
-.fxnav{background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;padding:0 10px;height:30px;font-size:10px;}
-.fxni{padding:0 8px;height:30px;display:flex;align-items:center;color:#555;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
-.fxni:hover{color:var(--fg);}
+.fxtop .logofx{font-weight:900;font-size:14px;color:#78aee8;}
+.fxtop .logorest{font-size:11px;color:#c8d8ee;font-weight:600;}
+.fxtop .certbadge{font-size:8px;color:#78aee8;border:1px solid #5580b8;border-radius:2px;padding:1px 4px;margin-left:6px;}
+.fxtop .userinfo{font-size:10px;color:#b8cce4;}
+.fxtop .sysbtn{background:var(--fx2-orange);color:#fff;border:0;border-radius:3px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;}
 /* FX main */
 .fxmain{display:flex;min-height:440px;}
-.fxsidebar{width:130px;background:#fff;border-right:1px solid #ddd;flex:0 0 auto;}
-.fxsb-hdr{background:var(--for);color:#fff;padding:7px 9px;font-size:10px;font-weight:700;cursor:pointer;}
-.fxsb-item{padding:7px 9px 7px 12px;font-size:11px;color:#333;cursor:pointer;border-bottom:1px solid #ede;display:flex;align-items:center;justify-content:space-between;}
-.fxsb-item:hover{background:#f0f5ee;}
-.fxsb-item.act{background:#e6f0e2;color:var(--fg);font-weight:700;}
-.fxsb-item .sba{color:#aaa;font-size:9px;}
+.fxsidebar{width:138px;background:var(--fx2-sb);border-right:none;flex:0 0 auto;}
+.fxsb-item{padding:8px 10px 8px 14px;font-size:11px;color:#c8dcf2;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent;}
+.fxsb-item:hover{background:rgba(255,255,255,.09);color:#fff;}
+.fxsb-item.act{background:rgba(255,255,255,.12);color:#fff;font-weight:700;border-left:3px solid #f5c200;}
+.fxsb-item .sba{color:rgba(255,255,255,.4);font-size:9px;}
 /* FX content */
-.fxcnt{flex:1;padding:10px;overflow:auto;}
+.fxcnt{flex:1;padding:10px;overflow:auto;background:#fff;}
 .fxbc{font-size:10px;color:#555;margin-bottom:8px;}
-.fxbc a{color:var(--fg);cursor:pointer;text-decoration:none;}
+.fxbc a{color:var(--fx2-link);cursor:pointer;text-decoration:none;}
 .fxbc a:hover{text-decoration:underline;}
-.fxinfo{background:#dceef8;border:1px solid #a8c8df;border-radius:3px;padding:7px 10px;font-size:10px;color:#1a4060;margin-bottom:10px;display:flex;gap:5px;}
-.fxinfo .ii{color:var(--fbl);font-weight:700;}
+.fxinfo{background:#dce8fb;border:1px solid #9ab8e0;border-radius:3px;padding:7px 10px;font-size:10px;color:#1a3a6e;margin-bottom:10px;display:flex;gap:5px;}
+.fxinfo .ii{color:var(--fx2-link);font-weight:700;}
 /* tables */
 .ftbl{width:100%;border-collapse:collapse;font-size:11px;}
-.ftbl th{background:var(--fg);color:#fff;padding:6px 7px;border:1px solid #3e6234;font-weight:600;text-align:center;}
-.ftbl td{padding:6px 7px;border:1px solid #cdd8c4;background:#fff;text-align:center;}
-.ftbl tr:hover td{background:#f5fbf2;}
-.btnd{background:var(--fbl);color:#fff;border:0;border-radius:3px;padding:3px 8px;font-size:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:2px;}
-.btnd.off{background:#aaa;cursor:default;}
-.btnkd{background:var(--for);color:#fff;border:0;border-radius:3px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;float:right;}
-.btnkej{background:var(--fg);color:#fff;border:0;border-radius:3px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
-.btnkej:disabled{background:#aaa;cursor:default;}
+.ftbl th{background:var(--fx2-blue);color:#fff;padding:6px 7px;border:1px solid var(--fx2-bord);font-weight:600;text-align:center;}
+.ftbl td{padding:6px 7px;border:1px solid #c8d8ee;background:#fff;text-align:center;}
+.ftbl tr:hover td{background:var(--fx2-row);}
+.btnd{background:var(--fx2-blue);color:#fff;border:0;border-radius:3px;padding:3px 8px;font-size:10px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:2px;}
+.btnd.off{background:#bbb;cursor:default;}
+.btnkd{background:var(--fx2-orange);color:#fff;border:0;border-radius:3px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;float:right;}
+.btnkej{background:var(--fx2-blue);color:#fff;border:0;border-radius:3px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
+.btnkej:disabled{background:#bbb;cursor:default;}
 /* journal table */
 .jtbl{width:100%;border-collapse:collapse;font-size:10px;}
-.jtbl th{background:var(--fg);color:#fff;padding:5px 4px;border:1px solid #3e6234;font-weight:600;text-align:center;font-size:9px;}
-.jtbl td{padding:5px 4px;border:1px solid #cdd8c4;text-align:center;background:#fff;vertical-align:middle;}
-.jtbl tr.jrow td{background:#fafff8;}
+.jtbl th{background:var(--fx2-blue);color:#fff;padding:5px 4px;border:1px solid var(--fx2-bord);font-weight:600;text-align:center;font-size:9px;}
+.jtbl td{padding:5px 4px;border:1px solid #c8d8ee;text-align:center;background:#fff;vertical-align:middle;}
+.jtbl tr.jrow td{background:#f3f7fd;}
 .jsel-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .jsel-bar .jsl{font-size:11px;}
-.fx-done-msg{background:#e6f4e0;border:1px solid #8ab870;border-radius:5px;padding:12px;text-align:center;font-size:13px;color:#2a6020;font-weight:700;margin:18px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
+.fx-done-msg{background:#dce8fb;border:1px solid #9ab8e0;border-radius:5px;padding:12px;text-align:center;font-size:13px;color:#1a3a6e;font-weight:700;margin:18px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
 /* FX views */
 .fxv{display:none;}.fxv.on{display:block;}
 
@@ -273,11 +271,11 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxtrans-ovl.on{display:flex;}
 .fxtrans-box{background:#fff;border-radius:16px;padding:32px 28px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);}
 .fxtrans-step{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;margin-bottom:10px;}
-.fxtrans-label{display:inline-block;background:var(--fg);color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:3px 9px;margin-bottom:14px;}
+.fxtrans-label{display:inline-block;background:var(--fx2-blue);color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:3px 9px;margin-bottom:14px;}
 .fxtrans-box h3{font-size:20px;color:#1a3050;font-weight:800;margin-bottom:10px;line-height:1.4;}
 .fxtrans-box p{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:22px;}
-.fxtrans-btn{background:var(--fg);color:#fff;border:0;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;width:100%;}
-.fxtrans-btn:hover{background:var(--fgd);}
+.fxtrans-btn{background:var(--fx2-blue);color:#fff;border:0;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;width:100%;}
+.fxtrans-btn:hover{background:var(--fx2-bord);}
 .rotate-ovl.on{display:flex;}
 .rotate-box{max-width:320px;}
 .rotate-icon{width:70px;height:110px;border:5px solid #fff;border-radius:12px;margin:0 auto 22px;position:relative;animation:rotHint 2.2s ease-in-out infinite;transform-origin:center;}
@@ -558,7 +556,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
         <div class="fxsb-item" onclick="goFX('fx-home')"><span>ホーム</span></div>
         <div class="fxsb-item"><span>業績管理</span><span class="sba">▾</span></div>
         <div class="fxsb-item"><span>証憑管理</span><span class="sba">▾</span></div>
-        <div class="fxsb-item act" id="sb-shouhyo"><span>財務会計</span><span class="sba">▾</span></div>
+        <div class="fxsb-item" id="sb-shouhyo"><span>財務会計</span><span class="sba">▾</span></div>
         <div class="fxsb-item"><span>販売管理</span><span class="sba">▾</span></div>
         <div class="fxsb-item"><span>電子帳簿</span><span class="sba">▾</span></div>
         <div class="fxsb-item"><span>設定(共通)</span><span class="sba">▾</span></div>
@@ -576,8 +574,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <div style="font-size:13px;font-weight:700;">よく使うメニュー</div>
             <div style="font-size:10px;color:var(--fbl);cursor:pointer;">よく使うメニューの編集</div>
           </div>
-          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">財務会計</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
+          <div style="background:var(--fx2-blue);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">財務会計</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#c8d8ee;border:1px solid #c8d8ee;margin-bottom:10px;">
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レシート入力方式 <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">仕訳辞書からの入力 <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">現金出納帳 <span style="color:var(--fbl);">▶</span></div>
@@ -588,8 +586,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <div id="menu-shouhyo" style="background:#fffaed;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;border:2px solid transparent;" onclick="goFX('fx-folders')"><b>証憑からの仕訳計上</b> <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">TKCシステム自動仕訳 <span style="color:var(--fbl);">▶</span></div>
           </div>
-          <div style="background:var(--fg);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">証憑管理</div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#cdd8c4;border:1px solid #cdd8c4;margin-bottom:10px;">
+          <div style="background:var(--fx2-blue);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">証憑管理</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#c8d8ee;border:1px solid #c8d8ee;margin-bottom:10px;">
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">証憑保存機能の起動 <span style="color:var(--fbl);">▶</span></div>
           </div>
         </div>
@@ -682,7 +680,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <tbody><tr><td colspan="13" style="padding:20px;color:#888;text-align:center;">（計上対象の仕訳はありません）</td></tr></tbody>
           </table>
           <div class="fx-done-msg">仕訳の計上が完了しました。FXクラウドに登録されました。</div>
-          <div style="text-align:center;"><button style="background:var(--fg);color:#fff;border:0;border-radius:5px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="restartTour()">最初からやり直す</button></div>
+          <div style="text-align:center;"><button style="background:var(--fx2-blue);color:#fff;border:0;border-radius:5px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="restartTour()">最初からやり直す</button></div>
         </div>
 
       </div><!-- /fxContent -->
@@ -725,7 +723,6 @@ function goPV(name){
   document.querySelectorAll('.pv').forEach(v=>v.classList.remove('on'));
   const t=document.querySelector(`.pv[data-pv="${name}"]`);
   if(t){t.classList.add('on');curPV=name;}
-  if(tourActive) positionTour();
 }
 function goFX(name){
   document.querySelectorAll('.fxv').forEach(v=>v.classList.remove('on'));
@@ -733,7 +730,6 @@ function goFX(name){
   const id = name.startsWith('fxv-') ? name : name.replace(/^fx-/, 'fxv-');
   const t=document.getElementById(id);
   if(t){t.classList.add('on');curFX=name;}
-  if(tourActive) positionTour();
 }
 function startUpload(){
   // ツアー中はステップ④の auto タイマーが画面遷移と進行を担うので、ここでは画面切替を行わない
