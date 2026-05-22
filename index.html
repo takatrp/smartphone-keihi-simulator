@@ -259,6 +259,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxovl svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 .fxovl .tcall{pointer-events:auto;}
 
+/* デスクトップ: ツアーパネルを左端に */
+@media(min-width:801px){.tpanel{order:-1;}}
 @media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}}
 
 /* === スマホ横向きで FX画面を全画面 PC 風に表示 === */
@@ -968,7 +970,13 @@ function positionPhone(s){
     const el=document.querySelector(s.target);
     if(el){
       const er=el.getBoundingClientRect();
-      const x=er.left-pr.left-6,y=er.top-pr.top-6,w=er.width+12,h=er.height+12;
+      let x=er.left-pr.left-6,y=er.top-pr.top-6,w=er.width+12,h=er.height+12;
+      // 画面端でクリップされないようにクランプ
+      const mx=2;
+      if(x<mx){w=w+(x-mx);x=mx;}
+      if(y<mx){h=h+(y-mx);y=mx;}
+      if(x+w>pW-mx)w=pW-mx-x;
+      if(y+h>pH-mx)h=pH-mx-y;
       const sx=x/pW*318,sy=y/pH*678,sw=w/pW*318,sh=h/pH*678;
       hole.setAttribute('x',sx);hole.setAttribute('y',sy);hole.setAttribute('width',sw);hole.setAttribute('height',sh);
       pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
