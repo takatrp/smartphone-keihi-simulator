@@ -946,9 +946,15 @@ function positionFX(s){
         call.style.top=Math.max(50,y-185)+'px';
         call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
       } else if(s.fxCallPos==='top-right'){
-        // 右上角に小さく固定（仕訳テーブルを隠さない）
-        call.style.top='80px';
-        call.style.left='auto';call.style.right='10px';call.style.maxWidth='210px';
+        // 他のカードと同じ全幅。高さに応じて上部/下部を切り替え
+        call.style.left='20px';call.style.right='20px';call.style.maxWidth='380px';
+        if(fr.height>=450){
+          // デスクトップ：下部固定（仕訳テーブルの下に表示）
+          call.style.top=(fr.height-220)+'px';
+        } else {
+          // モバイル：上部固定（ナビバー直下）
+          call.style.top='80px';
+        }
       } else {
         const cy=y+h+12;
         const maxY=fr.height-220;
