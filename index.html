@@ -268,6 +268,16 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 /* === スマホ縦持ちで FX ステップ進入時の「横向きにしてください」ポップアップ === */
 .rotate-ovl{position:fixed;inset:0;background:linear-gradient(135deg,#0b3a6e 0%,#1462c8 100%);z-index:9999;display:none;align-items:center;justify-content:center;color:#fff;text-align:center;padding:24px;}
+/* ===== FX移行アナウンスオーバーレイ ===== */
+.fxtrans-ovl{position:fixed;inset:0;background:rgba(10,20,40,.82);z-index:8888;display:none;align-items:center;justify-content:center;padding:20px;}
+.fxtrans-ovl.on{display:flex;}
+.fxtrans-box{background:#fff;border-radius:16px;padding:32px 28px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.fxtrans-step{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;margin-bottom:10px;}
+.fxtrans-label{display:inline-block;background:var(--fg);color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:3px 9px;margin-bottom:14px;}
+.fxtrans-box h3{font-size:20px;color:#1a3050;font-weight:800;margin-bottom:10px;line-height:1.4;}
+.fxtrans-box p{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:22px;}
+.fxtrans-btn{background:var(--fg);color:#fff;border:0;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;width:100%;}
+.fxtrans-btn:hover{background:var(--fgd);}
 .rotate-ovl.on{display:flex;}
 .rotate-box{max-width:320px;}
 .rotate-icon{width:70px;height:110px;border:5px solid #fff;border-radius:12px;margin:0 auto 22px;position:relative;animation:rotHint 2.2s ease-in-out infinite;transform-origin:center;}
@@ -285,7 +295,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
   <p>レシート撮影から仕訳計上まで、一連の流れを体験できます</p>
   <p class="phnote">※スマホで経費の説明用モックアップであり、実際の画面とは異なります</p>
   <div class="modesel" role="radiogroup">
-    <label class="msopt"><input type="radio" name="mode" id="msr-tour" checked onclick="restartTour()"><span>ガイドツアー</span></label>
+    <label class="msopt"><input type="radio" name="mode" id="msr-tour" checked onclick="restartTour()"><span>最初からガイド</span></label>
     <label class="msopt"><input type="radio" name="mode" id="msr-free" onclick="endTour()"><span>自由操作</span></label>
   </div>
 </div>
@@ -748,7 +758,7 @@ function showDetToast(){
 /* ===== STEPS ===== */
 const steps=[
   // PHONE steps
-  {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。',auto:1500,callPos:'top'},
+  {side:'phone',pv:'home',   target:null,            title:'① アプリを起動',body:'TKCのスマホアプリ「スマホで経費」が起動します。外出先で受け取ったレシートをすぐに撮影・登録できます。',auto:1500,callPos:'top',illuminate:true},
   {side:'phone',pv:'camera', target:'#shutter-btn', title:'② レシートを撮影',body:'カメラが起動します。枠内にレシートを収めてシャッターボタンをタップ。手ぶれ補正も自動でかかります。',advance:'#shutter-btn'},
   {side:'phone',pv:'confirm',target:'#save-btn',    title:'③ 保存前の確認',body:'撮影したレシートを確認。「保存先のフォルダ」と「購入の事由」を入力して「保存」をタップします。',advance:'#save-btn'},
   {side:'phone',pv:'uploading',target:null,         title:'④ FXクラウドへ自動アップロード',body:'"アップロード中…"のダイアログが表示されます。スマホで撮影したデータが自動でFXクラウドに送信されます。',auto:2200,callPos:'top'},
@@ -794,6 +804,7 @@ function endTour(){
   document.getElementById('fxOvl').classList.remove('on');
   // 自由操作モードでは案内ポップアップも閉じる
   const ro=document.getElementById('rotateOvl');if(ro)ro.classList.remove('on');
+  const ft=document.getElementById('fxTransOvl');if(ft)ft.classList.remove('on');
   renderStepList();
   updateModeButtons();
 }
@@ -805,12 +816,22 @@ function jumpTo(i){
   else{goFX(s.fxv);}
   showStep();
 }
+function continueFXTour(){
+  document.getElementById('fxTransOvl').classList.remove('on');
+  showStep();
+}
 function nextStep(){
   if(stepIdx>=steps.length-1){endTour();return;}
+  const prevSide=steps[stepIdx].side;
   stepIdx++;
   const s=steps[stepIdx];
   if(s.side==='phone'){goPV(s.pv);}
   else{goFX(s.fxv);}
+  // phone→FX の切替時にアナウンスを表示（PC・スマホ共通）
+  if(prevSide==='phone'&&s.side==='fx'){
+    document.getElementById('fxTransOvl').classList.add('on');
+    return; // continueFXTour() で showStep() を呼ぶ
+  }
   showStep();
 }
 function prevStep(){
@@ -845,8 +866,8 @@ function showStep(){
     document.getElementById('fxtcall-no').textContent=`STEP ${stepIdx+1}/${steps.length}`;
     document.getElementById('fxtcall').style.display='block';
   }
-  positionTour();
-  updateRotateOvl();
+  // DOM更新後に位置計算（rAF×2で確実にレイアウト確定）
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{positionTour();updateRotateOvl();}));
   // auto-advance for steps with `auto`
   if(s.auto){
     const myIdx=stepIdx;
@@ -874,6 +895,13 @@ function positionPhone(s){
   const hole=document.getElementById('hole');
   const pulse=document.getElementById('tpulse');
   const call=document.getElementById('tcall');
+  // illuminate:true → 画面全体をホールにして暗転なし
+  if(s.illuminate){
+    hole.setAttribute('x',0);hole.setAttribute('y',0);hole.setAttribute('width',318);hole.setAttribute('height',678);
+    pulse.style.display='none';
+    call.style.top='8px';call.style.left='14px';call.style.right='14px';call.style.maxWidth='none';
+    return;
+  }
   if(s.target){
     const el=document.querySelector(s.target);
     if(el){
@@ -964,6 +992,17 @@ window.addEventListener('load',()=>setTimeout(()=>{startTour();updateRotateOvl()
 </script>
 
 <!-- ===== スマホ横向き案内ポップアップ ===== -->
+<!-- ===== FX移行アナウンスオーバーレイ ===== -->
+<div class="fxtrans-ovl" id="fxTransOvl">
+  <div class="fxtrans-box">
+    <div class="fxtrans-step">STEP 6 / 11 完了</div>
+    <div class="fxtrans-label">ここから先はPC側の作業です</div>
+    <h3>FXクラウドで<br>仕訳を計上します</h3>
+    <p>スマホで撮影・送信したレシートデータを、<br>経理担当者がFXクラウドで仕訳に計上します。<br>画面右側のFXクラウド画面に切り替わります。</p>
+    <button class="fxtrans-btn" onclick="continueFXTour()">FXクラウドへ続く →</button>
+  </div>
+</div>
+
 <div class="rotate-ovl" id="rotateOvl">
   <div class="rotate-box">
     <div class="rotate-icon" aria-hidden="true"></div>
