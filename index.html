@@ -165,12 +165,21 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .nxtdoc{position:absolute;bottom:12px;right:12px;background:#fff;border:1px solid var(--tb);color:var(--tb);border-radius:18px;padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;}
 
 /* ====== FX CLOUD ====== */
-.fx-panel{flex:1 1 608px;min-width:280px;max-width:760px;background:#fff;border-radius:14px;border:1px solid var(--line);box-shadow:0 4px 18px rgba(0,0,0,.05);overflow:hidden;}
-.fxbbar{background:#eaeaea;padding:7px 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #ccc;}
-.fxbbar .dots{display:flex;gap:4px;}
-.fxbbar .dot{width:9px;height:9px;border-radius:50%;background:#ccc;}
-.fxbbar .dot.r{background:#ff6057;}.fxbbar .dot.y{background:#febc2e;}.fxbbar .dot.g{background:#28c840;}
-.fxbbar .url{flex:1;background:#fff;border-radius:3px;padding:3px 8px;font-size:10px;color:#666;border:1px solid #ccc;}
+/* PC モニターモックアップ枠 */
+.fx-panel{flex:1 1 608px;min-width:280px;max-width:760px;background:#fff;border-radius:5px;border:7px solid #1c1c1c;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px #080808;overflow:hidden;}
+/* Windows/Edge 風ブラウザバー */
+.fxbbar{background:#f3f3f3;padding:0;display:flex;flex-direction:column;border-bottom:none;}
+.fxtitlebar{display:flex;align-items:center;height:30px;background:#f3f3f3;padding-left:8px;border-bottom:1px solid #e0e0e0;}
+.fxtab{background:#fff;border:1px solid #c8c8c8;border-bottom:1px solid #fff;border-radius:6px 6px 0 0;padding:0 8px;height:26px;display:flex;align-items:center;gap:5px;font-size:11px;color:#1a1a1a;min-width:120px;margin-bottom:-1px;position:relative;z-index:1;}
+.fxwinbtns{display:flex;align-items:stretch;height:30px;margin-left:auto;}
+.fxwinbtn{width:42px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#333;cursor:pointer;user-select:none;}
+.fxwinbtn:hover{background:#ddd;}
+.fxwinbtn.wclose:hover{background:#c42b1c;color:#fff;}
+.fxaddrbar{display:flex;align-items:center;gap:3px;padding:4px 8px 5px;background:#f3f3f3;border-bottom:1px solid #c8c8c8;}
+.fxnavbtn{font-size:13px;color:#555;cursor:pointer;width:22px;text-align:center;line-height:1;flex:0 0 auto;}
+.fxnavbtn.off{color:#ccc;cursor:default;}
+.fxbbar .url{flex:1;background:#fff;border-radius:14px;padding:3px 10px;font-size:10px;color:#333;border:1px solid #c8c8c8;display:flex;align-items:center;gap:4px;overflow:hidden;white-space:nowrap;}
+.fxmorebtn{font-size:15px;color:#555;cursor:pointer;width:22px;text-align:center;flex:0 0 auto;}
 .fxwrap{min-height:500px;background:#f4f6fb;}
 /* FX top */
 .fxtop{background:#fff;border-bottom:1px solid #dde5ef;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
@@ -614,8 +623,28 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 <!-- ===== FX CLOUD ===== -->
 <div class="fx-panel" style="position:relative;">
   <div class="fxbbar">
-    <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
-    <div class="url">https://service.e21.jp/fxmaistar/</div>
+    <!-- タイトルバー（タブ＋ウィンドウ操作） -->
+    <div class="fxtitlebar">
+      <div style="width:15px;height:15px;background:linear-gradient(145deg,#0078d4,#50b0f0);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:900;flex:0 0 auto;margin-right:6px;">e</div>
+      <div class="fxtab">
+        <div style="width:11px;height:11px;background:var(--fx2-blue);border-radius:2px;flex:0 0 auto;"></div>
+        <span>FXクラウド</span>
+        <span style="margin-left:auto;color:#999;font-size:10px;padding:1px 3px;border-radius:3px;cursor:pointer;">✕</span>
+      </div>
+      <div class="fxwinbtns">
+        <div class="fxwinbtn">&#x2212;</div>
+        <div class="fxwinbtn">&#x2610;</div>
+        <div class="fxwinbtn wclose">&#x2715;</div>
+      </div>
+    </div>
+    <!-- アドレスバー -->
+    <div class="fxaddrbar">
+      <span class="fxnavbtn off">&#x2190;</span>
+      <span class="fxnavbtn off">&#x2192;</span>
+      <span class="fxnavbtn">&#x21BB;</span>
+      <div class="url"><span style="color:#2a7d4f;font-size:11px;">&#128274;</span>&nbsp;https://takatrp.github.io/smartphone-keihi-simulator/</div>
+      <span class="fxmorebtn">&#x2026;</span>
+    </div>
   </div>
   <div class="fxwrap" id="fxWrap">
     <!-- TOP BAR -->
