@@ -166,7 +166,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 /* ====== FX CLOUD ====== */
 /* PC モニターモックアップ枠 */
-.fx-panel{flex:1 1 608px;min-width:280px;max-width:760px;background:#fff;border-radius:5px;border:7px solid #1c1c1c;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px #080808;overflow:hidden;}
+.fx-panel{flex:1 1 608px;min-width:280px;max-width:760px;background:#fff;border-radius:5px;border:7px solid #1c1c1c;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px #080808;overflow:hidden;aspect-ratio:16/9;display:flex;flex-direction:column;}
 /* Windows/Edge 風ブラウザバー */
 .fxbbar{background:#f3f3f3;padding:0;display:flex;flex-direction:column;border-bottom:none;}
 .fxtitlebar{display:flex;align-items:center;height:30px;background:#f3f3f3;padding-left:8px;border-bottom:1px solid #e0e0e0;}
@@ -180,7 +180,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxnavbtn.off{color:#ccc;cursor:default;}
 .fxbbar .url{flex:1;background:#fff;border-radius:14px;padding:3px 10px;font-size:10px;color:#333;border:1px solid #c8c8c8;display:flex;align-items:center;gap:4px;overflow:hidden;white-space:nowrap;}
 .fxmorebtn{font-size:15px;color:#555;cursor:pointer;width:22px;text-align:center;flex:0 0 auto;}
-.fxwrap{min-height:500px;background:#f4f6fb;}
+.fxwrap{flex:1;overflow:hidden;background:#f4f6fb;display:flex;flex-direction:column;min-height:0;}
 /* FX top */
 .fxtop{background:#fff;border-bottom:1px solid #dde5ef;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:0 10px;height:42px;display:flex;align-items:center;justify-content:space-between;}
 .fxtop .logo{display:flex;align-items:center;gap:3px;}
@@ -190,14 +190,32 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 .fxtop .userinfo{font-size:10px;color:#555;}
 .fxtop .sysbtn{background:var(--fx2-orange);color:#fff;border:0;border-radius:3px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;}
 /* FX main */
-.fxmain{display:flex;min-height:440px;}
+.fxmain{display:flex;flex:1;overflow:hidden;min-height:0;}
 .fxsidebar{width:108px;background:#fff;border-right:1px solid #e2e8f0;flex:0 0 auto;}
 .fxsb-item{padding:7px 6px 7px 10px;font-size:10.5px;color:#2a3a50;cursor:pointer;border-bottom:1px solid #edf0f5;display:flex;align-items:center;justify-content:space-between;border-left:3px solid transparent;}
 .fxsb-item:hover{background:#f0f6ff;color:var(--fx2-blue);}
 .fxsb-item.act{background:#edf3fd;color:var(--fx2-blue);font-weight:700;border-left:3px solid var(--fx2-blue);}
 .fxsb-item .sba{color:#9aacbb;font-size:9px;}
 /* FX content */
-.fxcnt{flex:1;padding:10px;overflow:auto;background:#fff;}
+.fxcnt{flex:1;padding:10px;overflow-y:auto;background:#fff;min-height:0;}
+/* クリップアイコン・レシートポップアップ */
+.rcclip{cursor:pointer;font-size:13px;color:var(--fx2-blue);display:inline-block;line-height:1;}
+.rcclip:hover{opacity:.7;}
+.rc-popup{position:absolute;right:8px;top:100px;z-index:50;width:160px;background:#fff;border:2px solid #3a7cbd;border-radius:6px;padding:7px;box-shadow:0 8px 28px rgba(0,0,0,.28);font-family:"Courier New",monospace;font-size:5px;display:none;}
+.rc-popup-hdr{display:flex;justify-content:space-between;align-items:center;font-family:sans-serif;font-size:11px;font-weight:700;color:#333;border-bottom:1px solid #eee;padding-bottom:4px;margin-bottom:5px;}
+.rc-popup-hdr button{background:none;border:none;font-size:13px;cursor:pointer;color:#888;line-height:1;padding:0;}
+.rc-popup .rr{display:flex;justify-content:space-between;padding:.5px 0;}
+/* 計上確認ダイアログ */
+.keijo-dlg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8999;display:none;align-items:center;justify-content:center;}
+.keijo-dlg.on{display:flex;}
+.keijo-dlg-box{background:#fff;border-radius:4px;box-shadow:0 8px 32px rgba(0,0,0,.35);width:300px;overflow:hidden;}
+.keijo-dlg-title{background:#e8e8e8;border-bottom:1px solid #ccc;padding:5px 10px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;color:#333;}
+.keijo-dlg-title button{background:none;border:1px solid #aaa;border-radius:2px;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;padding:0;}
+.keijo-dlg-body{padding:20px 16px;display:flex;align-items:center;gap:10px;font-size:13px;color:#222;}
+.keijo-dlg-body .qi{width:22px;height:22px;background:#0066cc;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:0 0 auto;}
+.keijo-dlg-btns{display:flex;justify-content:flex-end;gap:8px;padding:10px 14px;border-top:1px solid #eee;background:#f5f5f5;}
+.keijo-dlg-btns button{padding:5px 20px;border-radius:3px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #bbb;background:#fff;}
+.keijo-dlg-btns .hai{background:var(--fx2-orange);color:#fff;border-color:var(--fx2-orange);}
 .fxbc{font-size:10px;color:#555;margin-bottom:8px;}
 .fxbc a{color:var(--fx2-link);cursor:pointer;text-decoration:none;}
 .fxbc a:hover{text-decoration:underline;}
@@ -270,7 +288,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 
 /* デスクトップ: ツアーパネルを左端に */
 @media(min-width:801px){.tpanel{order:-1;}}
-@media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}}
+@media(max-width:800px){.stage{flex-direction:column;align-items:center;}.fx-panel,.tpanel{width:100%;max-width:500px;}.fx-panel{aspect-ratio:auto;}}
+@media(max-width:1024px) and (orientation:landscape){.fx-panel{aspect-ratio:auto;}}
 /* 1920px以上: 3列を1行に収める */
 @media(min-width:1920px){
   .ph,.stage{max-width:1860px;}
@@ -639,8 +658,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
     </div>
     <!-- アドレスバー -->
     <div class="fxaddrbar">
-      <span class="fxnavbtn off">&#x2190;</span>
-      <span class="fxnavbtn off">&#x2192;</span>
+      <span class="fxnavbtn off" id="fxbtn-back" onclick="fxBack()">&#x2190;</span>
+      <span class="fxnavbtn off" id="fxbtn-fwd" onclick="fxForward()">&#x2192;</span>
       <span class="fxnavbtn">&#x21BB;</span>
       <div class="url"><span style="color:#2a7d4f;font-size:11px;">&#128274;</span>&nbsp;https://takatrp.github.io/smartphone-keihi-simulator/</div>
       <span class="fxmorebtn">&#x2026;</span>
@@ -683,6 +702,10 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <div style="font-size:13px;font-weight:700;">よく使うメニュー</div>
             <div style="font-size:10px;color:var(--fbl);cursor:pointer;">よく使うメニューの編集</div>
           </div>
+          <div style="background:var(--fx2-blue);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">証憑管理</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#c8d8ee;border:1px solid #c8d8ee;margin-bottom:10px;">
+            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">証憑保存機能の起動 <span style="color:var(--fbl);">▶</span></div>
+          </div>
           <div style="background:var(--fx2-blue);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;margin-bottom:0;">財務会計</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#c8d8ee;border:1px solid #c8d8ee;margin-bottom:10px;">
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レシート入力方式 <span style="color:var(--fbl);">▶</span></div>
@@ -694,10 +717,6 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">レジからのデータ受信 <span style="color:var(--fbl);">▶</span></div>
             <div id="menu-shouhyo" style="background:#fffaed;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;border:2px solid transparent;" onclick="goFX('fx-folders')"><b>証憑からの仕訳計上</b> <span style="color:var(--fbl);">▶</span></div>
             <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">TKCシステム自動仕訳 <span style="color:var(--fbl);">▶</span></div>
-          </div>
-          <div style="background:var(--fx2-blue);color:#fff;padding:5px 8px;font-size:11px;font-weight:700;border-radius:3px 3px 0 0;">証憑管理</div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#c8d8ee;border:1px solid #c8d8ee;margin-bottom:10px;">
-            <div style="background:#fff;padding:8px 7px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;">証憑保存機能の起動 <span style="color:var(--fbl);">▶</span></div>
           </div>
         </div>
 
@@ -731,7 +750,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
             <table class="ftbl" style="min-width:600px;">
               <thead><tr><th style="width:40px;">計上<br>対象</th><th style="width:30px;">証憑</th><th>月日</th><th>証憑番号</th><th>取引先名</th><th>取引金額</th><th>事業者登録番号</th><th>登録日時</th><th>備考</th></tr></thead>
               <tbody>
-                <tr class="active-row"><td><input type="checkbox" checked id="check-item"/></td><td></td><td>05/16</td><td>1640</td><td style="text-align:left;">株式会社だいこんしま</td><td>3,555</td><td>T1234567890123</td><td>2026/05/21 16:52</td><td></td></tr>
+                <tr class="active-row"><td><input type="checkbox" checked id="check-item"/></td><td><span class="rcclip" onclick="toggleRcPopup()">📎</span></td><td>05/16</td><td>1640</td><td style="text-align:left;">株式会社だいこんしま</td><td>3,555</td><td>T1234567890123</td><td>2026/05/21 16:52</td><td></td></tr>
               </tbody>
             </table>
           </div>
@@ -748,7 +767,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
           <div class="fxinfo"><span class="ii">ℹ</span>計上する仕訳を選択してください</div>
           <div class="jsel-bar">
             <span class="jsl">選択した仕訳を</span>
-            <button class="btnkej" id="btn-keijo" onclick="goFX('fx-done')">計上</button>
+            <button class="btnkej" id="btn-keijo" onclick="showKeijoDialog()">計上</button>
             <span style="font-size:10px;color:var(--muted);">1000件/頁 ▾</span>
           </div>
           <div style="overflow:auto;">
@@ -771,8 +790,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
                 </tr>
               </thead>
               <tbody>
-                <tr class="jrow"><td><input type="checkbox" id="jcheck1" checked/></td><td rowspan="2"></td><td>05/16</td><td rowspan="2">1640</td><td>接待交際費</td><td>5<br>10%A</td><td>1,000<br>(91)</td><td>現金</td><td>0</td><td>1,000</td><td style="text-align:left;">株式会社だいこんしま<br>手土産</td><td></td><td></td></tr>
-                <tr class="jrow"><td><input type="checkbox" checked/></td><td></td><td>接待交際費</td><td>5<br>軽8%A</td><td>2,555<br>(189)</td><td>現金</td><td>0</td><td>2,555</td><td style="text-align:left;">株式会社だいこんしま<br>手土産</td><td></td><td></td></tr>
+                <tr class="jrow"><td rowspan="2"><input type="checkbox" id="jcheck1" checked/></td><td rowspan="2"><span class="rcclip" onclick="toggleRcPopup()">📎</span></td><td>05/16</td><td>1640</td><td>接待交際費</td><td>5<br>10%A</td><td>1,000<br>(91)</td><td>現金</td><td>0</td><td>1,000</td><td style="text-align:left;">株式会社だいこんしま<br>手土産</td><td></td><td></td></tr>
+                <tr class="jrow"><td></td><td></td><td>接待交際費</td><td>5<br>軽8%A</td><td>2,555<br>(189)</td><td>現金</td><td>0</td><td>2,555</td><td style="text-align:left;">株式会社だいこんしま<br>手土産</td><td></td><td></td></tr>
               </tbody>
             </table>
           </div>
@@ -795,6 +814,54 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
       </div><!-- /fxContent -->
     </div><!-- /fxmain -->
   </div><!-- /fxwrap -->
+
+  <!-- RECEIPT POPUP -->
+  <div class="rc-popup" id="rcPopup">
+    <div class="rc-popup-hdr"><span>レシート</span><button onclick="toggleRcPopup()">✕</button></div>
+    <div style="text-align:center;border-bottom:1px dashed #aaa;padding-bottom:2px;margin-bottom:2px;">
+      <div style="font-size:8px;font-weight:900;letter-spacing:1px;">大塚山高原</div>
+      <div style="font-size:4.5px;">株式会社だいこんしま</div>
+      <div style="font-size:4px;color:#555;">登録番号 T1234567890123</div>
+    </div>
+    <div style="text-align:center;font-size:6.5px;font-weight:700;letter-spacing:2px;margin-bottom:2px;">領 収 書</div>
+    <div class="rr"><span>2026/05/16 12:17</span></div>
+    <div style="font-size:4px;margin-bottom:1px;">*印は軽減税率(8%)適用商品</div>
+    <div style="border-top:1px dashed #aaa;border-bottom:1px dashed #aaa;padding:1px 0;margin-bottom:1px;">
+      <div class="rr"><span>ひるぜん牛乳もち 巾着 *</span><span>610</span></div>
+      <div class="rr"><span>よもぎ若草3入 *</span><span>865</span></div>
+      <div class="rr"><span>せんじ肉にんにく風味 *</span><span>1,080</span></div>
+      <div class="rr"><span>キャラクター玩具</span><span>1,000</span></div>
+    </div>
+    <div style="border-top:1px solid #888;padding-top:1px;">
+      <div class="rr" style="font-weight:700;font-size:6.5px;"><span>合　　計</span><span>¥3,555</span></div>
+      <div class="rr"><span>(消費税対象10.0%</span><span>¥1,000)</span></div>
+      <div class="rr"><span>(内消費税等10.0%</span><span>¥90)</span></div>
+      <div class="rr"><span>(消費税対象 8.0%</span><span>¥2,555)</span></div>
+      <div class="rr"><span>(内消費税等 8.0%</span><span>¥189)</span></div>
+      <div class="rr"><span>税込合計</span><span>¥3,555</span></div>
+      <div class="rr"><span>現金</span><span>¥3,555</span></div>
+      <div class="rr" style="font-weight:700;"><span>お預かり</span><span>¥10,005</span></div>
+      <div class="rr" style="font-weight:700;"><span>お釣り</span><span>¥6,450</span></div>
+    </div>
+  </div>
+
+  <!-- 計上確認ダイアログ -->
+  <div class="keijo-dlg" id="keijoDialog">
+    <div class="keijo-dlg-box">
+      <div class="keijo-dlg-title">
+        <span>FXまいスタークラウド</span>
+        <button onclick="document.getElementById('keijoDialog').classList.remove('on')">✕</button>
+      </div>
+      <div class="keijo-dlg-body">
+        <div class="qi">?</div>
+        <span>選択した仕訳を計上します。よろしいですか？</span>
+      </div>
+      <div class="keijo-dlg-btns">
+        <button onclick="document.getElementById('keijoDialog').classList.remove('on')">いいえ</button>
+        <button class="hai" onclick="confirmKeijo()">はい</button>
+      </div>
+    </div>
+  </div>
 
   <!-- FX TOUR OVERLAY -->
   <div class="fxovl" id="fxOvl">
@@ -828,18 +895,49 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
 /* ===== state ===== */
 let curPV='home', curFX='fx-home';
 let tourActive=false, stepIdx=0;
+let fxHistory=['fx-home'], fxHistIdx=0;
 
 function goPV(name){
   document.querySelectorAll('.pv').forEach(v=>v.classList.remove('on'));
   const t=document.querySelector(`.pv[data-pv="${name}"]`);
   if(t){t.classList.add('on');curPV=name;}
 }
-function goFX(name){
+function goFX(name, pushHistory=true){
   document.querySelectorAll('.fxv').forEach(v=>v.classList.remove('on'));
   // 呼出側は 'fx-home' 形式、要素IDは 'fxv-home' 形式なので吸収する
   const id = name.startsWith('fxv-') ? name : name.replace(/^fx-/, 'fxv-');
   const t=document.getElementById(id);
   if(t){t.classList.add('on');curFX=name;}
+  if(pushHistory){
+    fxHistory=fxHistory.slice(0,fxHistIdx+1);
+    if(fxHistory[fxHistIdx]!==name){fxHistory.push(name);fxHistIdx=fxHistory.length-1;}
+  }
+  updateNavBtns();
+}
+function updateNavBtns(){
+  const bb=document.getElementById('fxbtn-back');
+  const fb=document.getElementById('fxbtn-fwd');
+  if(bb){if(fxHistIdx>0){bb.classList.remove('off');}else{bb.classList.add('off');}}
+  if(fb){if(fxHistIdx<fxHistory.length-1){fb.classList.remove('off');}else{fb.classList.add('off');}}
+}
+function fxBack(){
+  if(fxHistIdx>0){fxHistIdx--;goFX(fxHistory[fxHistIdx],false);}
+}
+function fxForward(){
+  if(fxHistIdx<fxHistory.length-1){fxHistIdx++;goFX(fxHistory[fxHistIdx],false);}
+}
+function toggleRcPopup(){
+  const p=document.getElementById('rcPopup');
+  if(!p)return;
+  p.style.display=(p.style.display==='block')?'none':'block';
+}
+function showKeijoDialog(){
+  document.getElementById('keijoDialog').classList.add('on');
+}
+function confirmKeijo(){
+  document.getElementById('keijoDialog').classList.remove('on');
+  goFX('fx-done');
+  if(tourActive && stepIdx===9){nextStep();}
 }
 function startUpload(){
   // ツアー中はステップ④の auto タイマーが画面遷移と進行を担うので、ここでは画面切替を行わない
@@ -866,7 +964,7 @@ const steps=[
   {side:'fx',fxv:'fx-home',  target:'#menu-shouhyo', title:'⑦ 証憑からの仕訳計上を選択',body:'FXクラウド（経理担当者側）のホーム画面です。財務会計メニューの「証憑からの仕訳計上」をクリックします。',advance:'#menu-shouhyo'},
   {side:'fx',fxv:'fx-folders',target:'#btn-receipt-data',title:'⑧ レシート（紙）を確認',body:'フォルダ一覧が表示されます。スマホでアップロードした「レシート（紙）」に1件のデータが届いています。「データ確認」をクリック。',advance:'#btn-receipt-data',fxCallPos:'above'},
   {side:'fx',fxv:'fx-list',  target:'#btn-kakutei',  title:'⑨ 計上対象データを確定',body:'受信したレシートデータの一覧です。株式会社だいこんしま・3,555円・事業者登録番号まで自動取得済みです。「計上対象データの確定」をクリック。',advance:'#btn-kakutei'},
-  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',note:'※初回は科目を指定する必要がありますが、仕訳ルールが作成されている場合は科目が初期表示されます。',advance:'#btn-keijo',fxCallPos:'top-right'},
+  {side:'fx',fxv:'fx-journal',target:'#btn-keijo',   title:'⑩ 仕訳を確認して計上',body:'自動生成された仕訳が表示されます。10%・軽8%の税率別に仕訳が作成されています。チェックを確認して「計上」をクリック。',note:'※初回は科目を指定する必要がありますが、仕訳ルールが作成されている場合は科目が初期表示されます。',fxCallPos:'top-right'},
   {side:'fx',fxv:'fx-done',  target:null,            title:'⑪ 計上完了！',body:'仕訳がFXクラウドに登録されました！レシート撮影から仕訳計上まで、スマホ側・PC側合わせて約1分で完了。',final:true},
 ];
 
@@ -891,7 +989,9 @@ function updateModeButtons(){
 }
 function startTour(){
   tourActive=true;stepIdx=0;
+  fxHistory=['fx-home'];fxHistIdx=0;
   goPV('home');goFX('fx-home');
+  updateNavBtns();
   document.getElementById('phoneOvl').classList.add('on');
   showStep();
   updateModeButtons();
