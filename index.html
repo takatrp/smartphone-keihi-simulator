@@ -849,7 +849,7 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
   <div class="keijo-dlg" id="keijoDialog">
     <div class="keijo-dlg-box">
       <div class="keijo-dlg-title">
-        <span>FXまいスタークラウド</span>
+        <span>確認</span>
         <button onclick="document.getElementById('keijoDialog').classList.remove('on')">✕</button>
       </div>
       <div class="keijo-dlg-body">
@@ -857,8 +857,8 @@ body{min-height:100%;background:var(--bg);font-family:"Hiragino Sans","Noto Sans
         <span>選択した仕訳を計上します。よろしいですか？</span>
       </div>
       <div class="keijo-dlg-btns">
-        <button onclick="document.getElementById('keijoDialog').classList.remove('on')">いいえ</button>
         <button class="hai" onclick="confirmKeijo()">はい</button>
+        <button onclick="document.getElementById('keijoDialog').classList.remove('on')">いいえ</button>
       </div>
     </div>
   </div>
@@ -936,8 +936,14 @@ function showKeijoDialog(){
 }
 function confirmKeijo(){
   document.getElementById('keijoDialog').classList.remove('on');
-  goFX('fx-done');
-  if(tourActive && stepIdx===9){nextStep();}
+  if(tourActive && stepIdx===9){
+    stepIdx++;  // ⑩ → ⑪
+    const s=steps[stepIdx];
+    goFX(s.fxv || 'fx-done');
+    showStep();
+  } else {
+    goFX('fx-done');
+  }
 }
 function startUpload(){
   // ツアー中はステップ④の auto タイマーが画面遷移と進行を担うので、ここでは画面切替を行わない
@@ -1020,6 +1026,8 @@ function continueFXTour(){
 }
 function nextStep(){
   if(stepIdx>=steps.length-1){endTour();return;}
+  // ⑩（stepIdx=9）では「計上」確認ダイアログを表示してフローを委譲
+  if(stepIdx===9){showKeijoDialog();return;}
   const prevSide=steps[stepIdx].side;
   stepIdx++;
   const s=steps[stepIdx];
@@ -1141,6 +1149,7 @@ function positionPhone(s){
 function positionFX(s){
   const fp=document.querySelector('.fx-panel');
   const fr=fp.getBoundingClientRect();
+  const ovr=document.getElementById('fxOvl').getBoundingClientRect();
   const hole=document.getElementById('fxhole');
   const pulse=document.getElementById('fxtpulse');
   const call=document.getElementById('fxtcall');
@@ -1149,7 +1158,7 @@ function positionFX(s){
     const el=document.querySelector(s.target);
     if(el){
       const er=el.getBoundingClientRect();
-      const x=er.left-fr.left-6,y=er.top-fr.top-6,w=er.width+12,h=er.height+12;
+      const x=er.left-ovr.left-6,y=er.top-ovr.top-6,w=er.width+12,h=er.height+12;
       hole.setAttribute('x',x);hole.setAttribute('y',y);hole.setAttribute('width',w);hole.setAttribute('height',h);
       pulse.style.display='block';pulse.style.left=x+'px';pulse.style.top=y+'px';pulse.style.width=w+'px';pulse.style.height=h+'px';
       // fxCallPos による位置制御
